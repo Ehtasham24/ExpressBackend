@@ -1,39 +1,12 @@
 const express=require('express');
-const routes=express('Routes');
-const mongoose=require('mongoose');
-const{GetItems}=require('../../Controller/Items');
-// mongoose.connect('mongodb+srv://admin:ehtasham24@cluster0.j7cztou.mongodb.net/?retryWrites=true&w=majority')
-// const items=require('./TestingConnections/Model')
+const routes=express.Router();
+const{GetItems,GetItemsByName,PostItems,UpdateItems,UpdateItemsByName,DeleteItems}=require('../../Controller/Items');
 
-const getItems={
-    schema:{
-        response:{
-            200:{
-                type:'array',
-                items:{
-                    type:'object',
-                    properties:{
-                        categories:{type:'string'}
-                    },
-                    items:{
-                    types:'array',
-                    items:{
-                    types:'objetct',
-                    properties:{
-                        id:{type:'integer'},
-                        name:{type:'string'},
-                        price:{type:'integer'},
-                        }
-                    }
-                }
-            }
-        }
-    }
-},
-handler:GetItems
-}
-
-
-routes.get('/items', (req, res)=>{res.send(items,getItems);})
+routes.get('/:tableId', GetItems);
+routes.post('/:tableId',GetItemsByName);
+routes.post('/:tableId', PostItems);
+routes.delete('/:tableId/:id', DeleteItems);
+routes.put('/:tableId/:id', UpdateItems);
+routes.put('/tableId', UpdateItemsByName);
 
 module.exports=routes;
