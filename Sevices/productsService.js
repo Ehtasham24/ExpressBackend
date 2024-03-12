@@ -1,8 +1,8 @@
 const { pool } = require("../Db");
 
-const getItemsById = async () => {
+const getItems = async () => {
   try {
-    const result = await pool.query(`SELECT * FROM public."Products"`);
+    const result = await pool.query(`SELECT * FROM Products`);
     return result;
   } catch (err) {
     res.status(500).send({ message: "Service error" });
@@ -12,10 +12,7 @@ const getItemsById = async () => {
 
 const getItemById = async (id) => {
   try {
-    const result = await pool.query(
-      `SELECT * FROM public."Products" WHERE id=$1`,
-      [id]
-    );
+    const result = await pool.query(`SELECT * FROM Products WHERE id=$1`, [id]);
     return result;
   } catch (err) {
     console.error("Error:", err);
@@ -26,7 +23,7 @@ const getItemById = async (id) => {
 const getItemByName = async (name) => {
   try {
     const result = await pool.query(
-      `SELECT * FROM public."Products" WHERE name ILIKE $1`,
+      `SELECT * FROM Products WHERE name ILIKE $1`,
       [name]
     );
     return result;
@@ -40,7 +37,7 @@ const postItems = async (name, buying_price, Quantity, Category_id) => {
   try {
     const result = await pool.query(
       `
-            INSERT INTO public."Products"(
+            INSERT INTO Products(
                 name, buying_price, "Quantity", "Category_id")
             VALUES ($1, $2, $3, $4)
             RETURNING id, name, buying_price, "Quantity", "Category_id"
@@ -75,7 +72,7 @@ const updateItems = async (name, price, Quantity, Category_id, id) => {
 const updateItemByName = async (name, buying_price, Quantity, Category_id) => {
   try {
     const result = await pool.query(
-      `UPDATE public."Products"
+      `UPDATE "Products"
         SET buying_price = $2, "Quantity" = $3, "Category_id" = $4
         WHERE name ILIKE $1
         RETURNING id, name, buying_price, "Quantity", "Category_id"
@@ -92,7 +89,7 @@ const updateItemByName = async (name, buying_price, Quantity, Category_id) => {
 };
 
 module.exports = {
-  getItemsById,
+  getItems,
   getItemById,
   getItemByName,
   postItems,
