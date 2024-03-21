@@ -2,12 +2,17 @@ const { updateSalesRecord } = require("../Sevices/salesService");
 
 const PostSales = async (req, res) => {
   const { sellingPrice, quantity, productID } = req.body;
-  const hold = await updateSalesRecord(sellingPrice, quantity, productID);
+  const { messageSend, updatedQuantity } = await updateSalesRecord(
+    sellingPrice,
+    quantity,
+    productID
+  );
+
   try {
     res.status(200).json({
       status: 200,
       message: "Sales data received successfully",
-      data: { hold },
+      data: { messageSend, updatedQuantity },
     });
   } catch (err) {
     res.status(404).json({

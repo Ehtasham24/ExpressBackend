@@ -11,6 +11,7 @@ const pool = new Pool({
   database: process.env.DATABASE || "pos_DB",
   password: process.env.PASSWORD || "dxtx998",
   port: process.env.PORT || 5432,
+  rowMode: "array",
 });
 
 module.exports = { pool };
