@@ -1,14 +1,15 @@
 const {
-  fetchAllCredits,
+  fetchAllRecords,
   fetchCreditByName,
   insertCredit,
   updateCreditByName,
+  deleteCreditByName,
 } = require("../Sevices/creditDebitServies");
 
-const getAllCredits = async (req, res) => {
+const getAllRecords = async (req, res) => {
   try {
-    const result = await fetchAllCredits();
-    res.send(result.rows);
+    const result = await fetchAllRecords();
+    res.send(result);
   } catch (err) {
     console.log(err);
     res.status(400).send(err);
@@ -53,9 +54,74 @@ const updateCreditByname = async (req, res) => {
   }
 };
 
+const deleteCreditByname = async (req, res) => {
+  const { name } = req.body;
+  try {
+    const result = await deleteCreditByName(name);
+    res.send(`Item with name${name} deleted ${result.rows}`);
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err);
+  }
+};
+
+const getDebitByname = async (req, res) => {
+  const { name } = req.body;
+  try {
+    const result = await fetchDebitByName(name);
+    res.send(result.rows);
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err);
+  }
+};
+
+const postDebit = async (req, res) => {
+  const { name, amount_due, amount_received } = req.body;
+  try {
+    const result = await insertDebit(name, amount_due, amount_received);
+    res.send(`New entry inserted: ${result.row}`);
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err);
+  }
+};
+
+const updateDebitByname = async (req, res) => {
+  const { name, amount_due, amount_received, total_amount } = req.body;
+  try {
+    const result = await updateDebitByName(
+      name,
+      amount_due,
+      amount_received,
+      total_amount
+    );
+    res.send(`Entry updated: ${result.row}`);
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err);
+  }
+};
+
+const deleteDebitByname = async (req, res) => {
+  const { name } = req.body;
+  try {
+    const result = await deleteDebitByName(name);
+    res.send(`Item with name ${name} deleted: ${result.rows}`);
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err);
+  }
+};
+
 module.exports = {
-  getAllCredits,
+  getAllRecords,
   getCreditByname,
   postCredit,
   updateCreditByname,
+  deleteCreditByname,
+  getDebitByname,
+  postDebit,
+  updateDebitByname,
+  deleteDebitByname,
 };
