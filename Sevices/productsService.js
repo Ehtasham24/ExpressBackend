@@ -97,4 +97,5 @@ module.exports = {
   getItemByName,
   postItems,
   updateItems,
+  updateItemByName,
 };
