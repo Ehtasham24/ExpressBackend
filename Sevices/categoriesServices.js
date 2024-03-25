@@ -1,4 +1,4 @@
-const { pool } = require("../../Db");
+const { pool } = require("../Db");
 
 const getCategories = async () => {
   try {
@@ -15,7 +15,7 @@ const getProductsForCategory = async (id) => {
     const query = `
       SELECT p.*
       FROM public."Products" p
-      JOIN public."Categories" c ON p."Category_id" = c.id
+      JOIN public."Categories" c ON p."category_id" = c.id
       WHERE c.id = $1;
     `;
     const result = await pool.query(query, [id]);
