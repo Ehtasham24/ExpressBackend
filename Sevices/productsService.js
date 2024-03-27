@@ -88,10 +88,44 @@ const updateItemByName = async (name, buying_price, Quantity, Category_id) => {
   }
 };
 
+const deleteItemById = async (id) => {
+  try {
+    const result = await pool.query(`DELETE FROM "Products" WHERE id=$1`, [id]);
+    if (result.rowCount === 0) {
+      res.send({ message: `No item with id: ${id} found` });
+    } else {
+      return result;
+    }
+  } catch (err) {
+    res.status(500).send({ message: "Service error" });
+    console.log(err);
+  }
+};
+
+const deleteItemsByName = async (name) => {
+  try {
+    const result = await pool.query(
+      `DELETE FROM "Products" WHERE name ILIKE $1`,
+      [name]
+    );
+    if (result.rowCount === 0) {
+      res.send({ message: `No item with name: ${name} found` });
+    } else {
+      return result;
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: "Services error" });
+  }
+};
+
 module.exports = {
   getItems,
   getItemById,
   getItemByName,
   postItems,
   updateItems,
+  updateItemByName,
+  deleteItemsByName,
+  deleteItemById,
 };
