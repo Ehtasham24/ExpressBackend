@@ -129,9 +129,6 @@ module.exports = {
   postItems,
   updateItems,
   updateItemByName,
-<<<<<<< HEAD
-=======
-  deleteItemById,
   deleteItemsByName,
->>>>>>> 5e037e9db4c29e48790ec116dffb1093b157c2f4
+  deleteItemById,
 };
