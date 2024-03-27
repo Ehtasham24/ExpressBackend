@@ -5,12 +5,13 @@ const {
   postItems,
   updateItems,
   updateItemByName,
+  deleteItemById,
+  deleteItemsByName,
 } = require("../Sevices/productsService");
 
 const { GetItem } = require("./categoriesController");
 
 const GetItems = async (req, res) => {
-  const categories = await GetItem;
   try {
     const result = await getItems();
     res.send(result.rows);
@@ -63,7 +64,7 @@ const UpdateItems = async (req, res) => {
   try {
     const result = await updateItems(name, price, Quantity, Category_id, id);
     res.send({
-      message: `Item with id: ${id} updated with name: ${name} & price: ${price} and Quantity: ${Quantity}`,
+      message: `Item with id: ${id} updated with name: ${name} & price: ${price} and Quantity: ${Quantity} ${result}`,
     });
   } catch (err) {
     res.status(500).send({ message: "Controller error" });
@@ -73,16 +74,13 @@ const UpdateItems = async (req, res) => {
 
 const DeleteItems = async (req, res) => {
   const id = req.params.id;
-
   try {
-    const result = await pool.query(`DELETE FROM "Products" WHERE id=$1`, [id]);
-    if (result.rowCount === 0) {
-      res.send({ message: `No item with id: ${id} found` });
-    } else {
-      res.send({ message: `Item with id: ${id} deleted` });
-    }
+    const result = await deleteItemById(id);
+    res.send({
+      message: `Item with id: ${id} deleted ${result}`,
+    });
   } catch (err) {
-    res.status(500).send({ message: "Internal error" });
+    res.status(500).send({ message: "Controller error" });
     console.log(err);
   }
 };
@@ -91,18 +89,13 @@ const DeleteItemsByName = async (req, res) => {
   const { name } = req.body;
 
   try {
-    const result = await pool.query(
-      `DELETE FROM "Products" WHERE name ILIKE $1`,
-      [name]
-    );
-    if (result.rowCount === 0) {
-      res.send({ message: `No item with name: ${name} found` });
-    } else {
-      res.send({ message: `Item with name: ${name} deleted` });
-    }
+    const result = await deleteItemsByName(name);
+    res.send({
+      message: `Item with name: ${name} deleted successfully ${result}`,
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).send({ message: "Internal error" });
+    res.status(500).send({ message: "Controller error" });
   }
 };
 
@@ -118,7 +111,6 @@ const UpdateItemsByName = async (req, res) => {
     res.send({ message: "updated successfully" });
   } catch (err) {
     console.error(err);
-
     res.status(500).send({ message: "controller error" });
   }
 };
