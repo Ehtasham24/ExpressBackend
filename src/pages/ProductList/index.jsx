@@ -16,6 +16,7 @@ import { useParams } from "react-router-dom";
 export default function ProductListPage() {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
 
   const { prodNum } = useParams();
 
@@ -48,16 +49,28 @@ export default function ProductListPage() {
 
       const data = await response.json();
       console.log("Products data:", data);
-      setProducts(data);
+
+      const filteredProducts = data.filter((product) =>
+        product.productname.toLowerCase().includes(searchValue.toLowerCase())
+      );
+
+      setProducts(filteredProducts);
+      // setProducts(data);
     } catch (error) {
       console.error("Error fetching Products:", error);
     }
   };
 
+  const handleSearchInputChange = (event) => {
+    console.log("Event:", event); // Check the event object
+    // console.log("Event target:", event.target);
+    setSearchValue(event.target.value);
+  };
+
   useEffect(() => {
     fetchCategories();
     fetchProducts(prodNum);
-  }, []);
+  }, [searchValue]);
 
   return (
     <>
@@ -81,6 +94,16 @@ export default function ProductListPage() {
             </Text>
           </div>
           <Heading as="h1">Product List</Heading>
+          <div className="flex gap-10 text-xl">
+            <input
+              type="text"
+              value={searchValue}
+              onChange={handleSearchInputChange}
+              placeholder="Search products..."
+              style={{ border: "1px solid black" }}
+              className="h-10 w-96"
+            />
+          </div>
           <div className="flex flex-row md:flex-col justify-start items-start w-full gap-8 md:gap-5">
             <div className="flex flex-col items-start justify-start w-[16%] md:w-full gap-8">
               <div className="flex flex-col items-start justify-start w-full gap-[31px]">
@@ -217,21 +240,125 @@ export default function ProductListPage() {
               </div>
             </div>
             <div className="flex flex-col items-center justify-start w-[84%] md:w-full gap-[29px]">
-              <div className="flex flex-row sm:flex-col justify-between w-full sm:gap-10">
-                <Text as="p" className="flex">
-                  <span className="text-gray-500">Viewing </span>
-                  <span className="text-gray-800">20</span>
-                  <span className="text-gray-500">of </span>
-                  <span className="text-gray-800">160</span>
-                  <span className="text-gray-500">product</span>
-                </Text>
-              </div>
               {/*  PRODUCTS INSERT */}
-              {products.map((product, index) => (
-                <div className="bg-blue-500 text-black">
-                  {product.productname}
+              {/*  <div className="border-4">
+                {products.map((product, index) => (
+                  <div className="flex justify-between items-center gap-8 ">
+                    <div className=" text-black gap-8">
+                      {product.productname}
+                    </div>
+                    <div>{product.quantity}</div>
+                  </div>
+                ))}
+              </div> */}
+              {/* <div className="gap-8 border border-black h-[1000px] w-full flex"> */}
+              {/*   <div className="">
+                <div className="flex justify-between">
+                  <h2>No</h2>
+                  <h2 className="w-72">Product Name</h2>
+                  <h2 className="">Quantity Buying Price</h2>
+                  <h2></h2>
                 </div>
-              ))}
+
+                {products.map((product, index) => (
+                  <div key={product.id} className="">
+                    <div className="mt-4 flex justify-between items-center border border-black bg-slate-300 h-[70px] w-[1200px]">
+                      <h1 className="text-lg uppercase font-bold ml-5">
+                        {index + 1}.
+                      </h1>
+                      <p className="text-lg uppercase font-bold">
+                        {product.productname}
+                      </p>
+
+                      <div className="flex gap-44 justify-between items-center">
+                        <p className="text-black-600 ">{product.quantity}</p>
+                        <p className="text-black-600">{product.buyingprice}</p>
+
+                        <button className="mr-16 px-4 py-2 bg-gray-800 text-white-A700 text-xs font-bold uppercase rounded hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
+                          Add to cart
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div> */}
+
+              {/*  <div className="">
+                <table className="w-full border border-black">
+                  <thead>
+                    <tr className="flex justify-between">
+                      <th className="w-16">No</th>
+                      <th className="w-72">Product Name</th>
+                      <th>Quantity</th>
+                      <th>Buying Price</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {products.map((product, index) => (
+                      <tr
+                        key={product.id}
+                        className="mt-4 border border-black bg-slate-300"
+                      >
+                        <td className="text-lg uppercase font-bold ml-5">
+                          {index + 1}.
+                        </td>
+                        <td className="text-lg uppercase font-bold">
+                          {product.productname}
+                        </td>
+                        <td className="text-black-600">{product.quantity}</td>
+                        <td className="text-black-600">
+                          {product.buyingprice}
+                        </td>
+                        <td className="flex justify-end">
+                          <button className="mr-4 px-4 py-2 bg-gray-800 text-white-A700 text-xs font-bold uppercase rounded hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
+                            Add to cart
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div> */}
+              <div className="h-[900px] overflow-y-auto">
+                <table className="w-full border border-black">
+                  <thead>
+                    <tr className="flex gap-52 justify-between py-3">
+                      <th className=" pl-5">No</th>
+                      <th className="whitespace-nowrap">Product Name</th>
+                      <th>Quantity</th>
+                      <th className="whitespace-nowrap">Buying Price</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {products.map((product, index) => (
+                      <tr
+                        key={product.id}
+                        className=" border border-black bg-slate-300"
+                      >
+                        <td className="text-lg uppercase font-bold pl-5 py-3">
+                          {index + 1}.
+                        </td>
+                        <td className="text-lg uppercase font-bold">
+                          {product.productname}
+                        </td>
+                        <td className="text-black-600 pl-12 text-xl">
+                          {product.quantity}
+                        </td>
+                        <td className="text-black-600 pl-16 text-xl">
+                          {product.buyingprice}
+                        </td>
+                        <td className="flex justify-end">
+                          <button className="mr-4 px-4 py-2 bg-gray-800 text-white-A700 text-xs font-bold uppercase rounded hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
+                            Add to cart
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
