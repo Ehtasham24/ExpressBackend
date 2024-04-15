@@ -46,10 +46,10 @@ const GetItemsByName = async (req, res) => {
 };
 
 const PostItems = async (req, res) => {
-  const { name, buying_price, Quantity, Category_id } = req.body;
+  const { name, buying_price, quantity, category_id } = req.body;
   console.log(req.body);
   try {
-    const result = await postItems(name, buying_price, Quantity, Category_id);
+    const result = await postItems(name, buying_price, quantity, category_id);
 
     res.send(result.rows);
   } catch (err) {
@@ -75,12 +75,16 @@ const UpdateItems = async (req, res) => {
 const DeleteItems = async (req, res) => {
   const id = req.params.id;
   try {
-    const result = await deleteItemById(id);
-    res.send({
-      message: `Item with id: ${id} deleted ${result}`,
-    });
+    const { name, deleteResult } = await deleteItemById(id);
+    if (deleteResult.rowCount === 0) {
+      res.send({ message: `No item with id: ${id} found` });
+    } else {
+      res.send({
+        message: `Item with id: ${id} (${name}) deleted successfully`,
+      });
+    }
   } catch (err) {
-    res.status(500).send({ message: "Controller error" });
+    res.status(500).send({ message: `Controller error: ${err.message}` });
     console.log(err);
   }
 };
@@ -91,7 +95,7 @@ const DeleteItemsByName = async (req, res) => {
   try {
     const result = await deleteItemsByName(name);
     res.send({
-      message: `Item with name: ${name} deleted successfully ${result}`,
+      message: `Item with name: ${name} deleted successfully ${result.rows}`,
     });
   } catch (err) {
     console.error(err);
@@ -100,13 +104,13 @@ const DeleteItemsByName = async (req, res) => {
 };
 
 const UpdateItemsByName = async (req, res) => {
-  const { name, buying_price, Quantity, Category_id } = req.body;
+  const { name, buying_price, quantity, category_id } = req.body;
   try {
     const result = await updateItemByName(
       name,
       buying_price,
-      Quantity,
-      Category_id
+      quantity,
+      category_id
     );
     res.send({ message: "updated successfully" });
   } catch (err) {

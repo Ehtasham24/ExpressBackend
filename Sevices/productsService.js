@@ -2,120 +2,127 @@ const { pool } = require("../Db");
 
 const getItems = async () => {
   try {
-    const result = await pool.query(`SELECT * FROM Products`);
+    const result = await pool.query(`SELECT * FROM products`);
     return result;
   } catch (err) {
-    res.status(500).send({ message: "Service error" });
     console.log(err);
+    throw new Error("Service error", err);
   }
 };
 
 const getItemById = async (id) => {
   try {
-    const result = await pool.query(`SELECT * FROM Products WHERE id=$1`, [id]);
+    const result = await pool.query(`SELECT * FROM products WHERE id=$1`, [id]);
     return result;
   } catch (err) {
     console.error("Error:", err);
-    res.status(500).send({ message: "Service error" });
+    throw new Error("Service error", err);
   }
 };
 
 const getItemByName = async (name) => {
   try {
     const result = await pool.query(
-      `SELECT * FROM Products WHERE name ILIKE $1`,
+      `SELECT * FROM products WHERE name ILIKE $1`,
       [name]
     );
     return result;
   } catch (err) {
     console.error("Error:", err);
-    res.status(500).send({ message: "Service error" });
+    throw new Error("Service error", err);
   }
 };
 
-const postItems = async (name, buying_price, Quantity, Category_id) => {
+const postItems = async (name, buying_price, quantity, category_id) => {
   try {
     const result = await pool.query(
       `
             INSERT INTO products(
-                name, buying_price, "Quantity", "Category_id")
+                name, buying_price, "quantity", "category_id")
             VALUES ($1, $2, $3, $4)
-            RETURNING id, name, buying_price, "Quantity", "Category_id"
+            RETURNING id, name, buying_price, quantity, category_id
         `,
-      [name, buying_price, Quantity, Category_id]
+      [name, buying_price, quantity, category_id]
     );
 
     return result;
   } catch (err) {
-    res.status(500).send({ message: "Service error" });
     console.log(err);
+    throw new Error("Service error", err);
   }
 };
 
-const updateItems = async (name, price, Quantity, Category_id, id) => {
+const updateItems = async (name, price, quantity, category_id, id) => {
   try {
     const result = await pool.query(
-      `UPDATE "Products" SET name=$1, buying_price=$2, "Quantity"=$3, "Category_id"=$4 WHERE id=$5 RETURNING *`,
-      [name, price, Quantity, Category_id, id]
+      `UPDATE "products" SET name=$1, buying_price=$2, "quantity"=$3, "category_id"=$4 WHERE id=$5 RETURNING *`,
+      [name, price, quantity, category_id, id]
     );
     if (result.rowCount === 0) {
-      res.send({ message: `No item with id: ${id} found` });
+      throw new Error({ message: `No item with id: ${id} found` });
     } else {
       return result;
     }
   } catch (err) {
-    res.status(500).send({ message: "servicce error" });
+    throw new Error("Service error", err);
     console.log(err);
   }
 };
 
-const updateItemByName = async (name, buying_price, Quantity, Category_id) => {
+const updateItemByName = async (name, buying_price, quantity, category_id) => {
   try {
     const result = await pool.query(
-      `UPDATE "Products"
-        SET buying_price = $2, "Quantity" = $3, "Category_id" = $4
+      `UPDATE "products"
+        SET buying_price = $2, "quantity" = $3, "category_id" = $4
         WHERE name ILIKE $1
-        RETURNING id, name, buying_price, "Quantity", "Category_id"
+        RETURNING id, name, buying_price, "quantity", "category_id"
         `,
-      [`%${name}%`, buying_price, Quantity, Category_id]
+      [`%${name}%`, buying_price, quantity, category_id]
     );
 
-    if (updateResult.rowCount === 0) {
-      res.send({ message: `No item with name: ${name} found` });
+    if (result.rowCount === 0) {
+      throw new Error({ message: `No item with name: ${name} found` });
     } else return result;
   } catch (err) {
-    res.status(500).send({ message: err.message });
+    console.log(err);
+    throw new Error({ message: err.message });
   }
 };
 
 const deleteItemById = async (id) => {
   try {
-    const result = await pool.query(`DELETE FROM "Products" WHERE id=$1`, [id]);
-    if (result.rowCount === 0) {
-      res.send({ message: `No item with id: ${id} found` });
-    } else {
-      return result;
+    const nameResult = await pool.query(
+      `SELECT name FROM "products" WHERE id=$1`,
+      [id]
+    );
+    if (nameResult.rows.length === 0) {
+      throw new Error(`No item with id: ${id} found`);
     }
+    const name = nameResult.rows[0].name;
+    const deleteResult = await pool.query(
+      `DELETE FROM "products" WHERE id=$1`,
+      [id]
+    );
+    return { name, deleteResult };
   } catch (err) {
-    res.status(500).send({ message: "Service error" });
-    console.log(err);
+    throw new Error(`Service error: ${err.message}`);
   }
 };
 
 const deleteItemsByName = async (name) => {
   try {
     const result = await pool.query(
-      `DELETE FROM "Products" WHERE name ILIKE $1`,
+      `DELETE FROM "products" WHERE name ILIKE $1`,
       [name]
     );
     if (result.rowCount === 0) {
-      res.send({ message: `No item with name: ${name} found` });
+      throw new Error({ message: `No item with name: ${name} found` });
     } else {
       return result;
     }
   } catch (err) {
     console.error(err);
-    res.status(500).send({ message: "Services error" });
+    throw new Error({ message: "Services error" });
   }
 };
 
