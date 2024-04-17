@@ -24,8 +24,8 @@ export default function CategorieswithSidebarPage() {
   const [formData, setFormData] = useState({
     name: "",
     buying_price: "",
-    Quantity: "",
-    Category_id: "",
+    quantity: "",
+    category_id: "",
   });
 
   const fetchData = async () => {
@@ -66,17 +66,6 @@ export default function CategorieswithSidebarPage() {
     modal.classList.remove("flex");
   };
 
-  const handleChange = (e) => {
-    // Extract the name and value from the input field that triggered the change event
-    const { name, value } = e.target;
-
-    // Update the form state (formData) with the new value
-    setFormData((prevFormData) => ({
-      ...prevFormData, // Spread the previous state to avoid losing existing data
-      [name]: value, // Update the specific field (name) with the new value (value)
-    }));
-  };
-
   const handleSubmitProduct = async (e) => {
     e.preventDefault();
     try {
@@ -87,6 +76,7 @@ export default function CategorieswithSidebarPage() {
         },
         body: JSON.stringify(formData),
       });
+      console.log(response);
       if (!response.ok) {
         throw new Error("Failed to submit form");
       }
@@ -95,6 +85,17 @@ export default function CategorieswithSidebarPage() {
       console.error("Error submitting form:", error);
       alert("Failed to submit form. Please try again later.");
     }
+  };
+
+  const handleChange = (e) => {
+    // Extract the name and value from the input field that triggered the change event
+    const { name, value } = e.target;
+
+    // Update the form state (formData) with the new value
+    setFormData((prevFormData) => ({
+      ...prevFormData, // Spread the previous state to avoid losing existing data
+      [name]: value, // Update the specific field (name) with the new value (value)
+    }));
   };
 
   return (
@@ -144,7 +145,11 @@ export default function CategorieswithSidebarPage() {
               </button>
             </div>
             <div className="p-4 md:p-5  opacity-100 z-50 background bg-white-A700">
-              <form className="space-y-4" action="#">
+              <form
+                className="space-y-4"
+                action="#"
+                onSubmit={handleSubmitProduct}
+              >
                 <div>
                   <label
                     htmlFor="product_name"
@@ -156,6 +161,7 @@ export default function CategorieswithSidebarPage() {
                     type="text"
                     name="name"
                     id="product_name"
+                    onChange={handleChange}
                     className="bg-gray-50 border border-gray-300 mt-4 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     placeholder="Enter product"
                     required
@@ -169,10 +175,11 @@ export default function CategorieswithSidebarPage() {
                     Buying Price
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     name="buying_price"
                     id="buying_price"
                     placeholder="Enter buying price"
+                    onChange={handleChange}
                     className="bg-gray-50 border border-gray-300 mt-4 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     required
                   />
@@ -186,10 +193,11 @@ export default function CategorieswithSidebarPage() {
                     Quantity
                   </label>
                   <input
-                    type="text"
-                    name="Quantity"
+                    type="number"
+                    name="quantity"
                     id="quantity"
                     placeholder="Enter quantity"
+                    onChange={handleChange}
                     className="bg-gray-50 border border-gray-800 mt-4 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     required
                   />
@@ -202,10 +210,11 @@ export default function CategorieswithSidebarPage() {
                     Category ID
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     name="category_id"
                     id="Category_id"
                     placeholder="Enter category id"
+                    onChange={handleChange}
                     className="bg-gray-50 border border-gray-300 mt-4 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     required
                   />
@@ -243,7 +252,6 @@ export default function CategorieswithSidebarPage() {
                       type="button"
                       onClick={(e) => {
                         handleModalToggle();
-                        handleSubmitProduct(e);
                       }}
                     >
                       Add Product

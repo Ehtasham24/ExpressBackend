@@ -350,7 +350,7 @@ export default function ProductListPage() {
                           {product.buyingprice}
                         </td>
                         <td className="flex justify-end">
-                          <button className="mr-4 px-4 py-2 bg-gray-800 text-white-A700 text-xs font-bold uppercase rounded hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
+                          <button className="mr-4 px-4 py-2 mt-2 bg-gray-800 text-white-A700 text-xs font-bold uppercase rounded hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
                             Add to cart
                           </button>
                         </td>
