@@ -38,9 +38,9 @@ const postItems = async (name, buying_price, quantity, category_id) => {
     const result = await pool.query(
       `
             INSERT INTO products(
-                name, buying_price, "quantity", "category_id")
+                productname, buyingprice, "quantity", "category_id")
             VALUES ($1, $2, $3, $4)
-            RETURNING id, name, buying_price, quantity, category_id
+            RETURNING id, productname, buyingprice, quantity, category_id
         `,
       [name, buying_price, quantity, category_id]
     );
