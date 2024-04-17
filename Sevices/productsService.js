@@ -112,7 +112,7 @@ const deleteItemById = async (id) => {
 const deleteItemsByName = async (name) => {
   try {
     const result = await pool.query(
-      `DELETE FROM "products" WHERE name ILIKE $1`,
+      `DELETE FROM "products" WHERE productname = $1`,
       [name]
     );
     if (result.rowCount === 0) {
