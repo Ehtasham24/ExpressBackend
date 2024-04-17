@@ -11,7 +11,7 @@ const Server = async () => {
     origin: "http://localhost:3000",
   };
 
-  server.use(cors(corsOptions)); // Corrected from app.use to server.use
+  server.use(cors(corsOptions));
 
   try {
     server.use(express.json());
