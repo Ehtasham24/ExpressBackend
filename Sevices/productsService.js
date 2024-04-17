@@ -47,8 +47,11 @@ const postItems = async (name, buying_price, quantity, category_id) => {
 
     return result;
   } catch (err) {
-    console.log(err);
-    throw new Error("Service error", err);
+    if (err.code === "23505" && err.constraint === "unique_name_lower") {
+      throw new Error(
+        "Name already present in database. Choose a different name."
+      );
+    } else throw new Error(err);
   }
 };
 

@@ -53,7 +53,7 @@ const PostItems = async (req, res) => {
 
     res.send(result.rows);
   } catch (err) {
-    res.status(500).send({ message: "Controller error" });
+    res.status(500).send({ message: err.message });
     console.log(err);
   }
 };
