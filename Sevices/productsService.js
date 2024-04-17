@@ -47,10 +47,8 @@ const postItems = async (name, buying_price, quantity, category_id) => {
 
     return result;
   } catch (err) {
-    if (err.code === "23505" && err.constraint === "unique_name_lower") {
-      throw new Error(
-        "Name already present in database. Choose a different name."
-      );
+    if (err.code === "23505" && err.constraint === "products_productname_key") {
+      throw new Error("Cannot enter duplicate products!");
     } else throw new Error(err);
   }
 };
