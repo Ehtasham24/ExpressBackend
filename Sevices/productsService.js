@@ -113,7 +113,7 @@ const deleteItemById = async (id) => {
 const deleteItemsByName = async (name) => {
   try {
     const result = await pool.query(
-      `DELETE FROM "products" WHERE productname = $1`,
+      `DELETE FROM products WHERE productname = $1`,
       [name]
     );
     if (result.rowCount === 0) {
@@ -123,7 +123,7 @@ const deleteItemsByName = async (name) => {
     }
   } catch (err) {
     console.error(err);
-    throw new Error({ message: "Services error" });
+    throw new Error(`Services error: ${err.message}`);
   }
 };
 
