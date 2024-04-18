@@ -63,7 +63,6 @@ export default function ProductListPage() {
 
   const handleSearchInputChange = (event) => {
     console.log("Event:", event); // Check the event object
-    // console.log("Event target:", event.target);
     setSearchValue(event.target.value);
   };
 
@@ -240,86 +239,6 @@ export default function ProductListPage() {
               </div>
             </div>
             <div className="flex flex-col items-center justify-start w-[84%] md:w-full gap-[29px]">
-              {/*  PRODUCTS INSERT */}
-              {/*  <div className="border-4">
-                {products.map((product, index) => (
-                  <div className="flex justify-between items-center gap-8 ">
-                    <div className=" text-black gap-8">
-                      {product.productname}
-                    </div>
-                    <div>{product.quantity}</div>
-                  </div>
-                ))}
-              </div> */}
-              {/* <div className="gap-8 border border-black h-[1000px] w-full flex"> */}
-              {/*   <div className="">
-                <div className="flex justify-between">
-                  <h2>No</h2>
-                  <h2 className="w-72">Product Name</h2>
-                  <h2 className="">Quantity Buying Price</h2>
-                  <h2></h2>
-                </div>
-
-                {products.map((product, index) => (
-                  <div key={product.id} className="">
-                    <div className="mt-4 flex justify-between items-center border border-black bg-slate-300 h-[70px] w-[1200px]">
-                      <h1 className="text-lg uppercase font-bold ml-5">
-                        {index + 1}.
-                      </h1>
-                      <p className="text-lg uppercase font-bold">
-                        {product.productname}
-                      </p>
-
-                      <div className="flex gap-44 justify-between items-center">
-                        <p className="text-black-600 ">{product.quantity}</p>
-                        <p className="text-black-600">{product.buyingprice}</p>
-
-                        <button className="mr-16 px-4 py-2 bg-gray-800 text-white-A700 text-xs font-bold uppercase rounded hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
-                          Add to cart
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div> */}
-
-              {/*  <div className="">
-                <table className="w-full border border-black">
-                  <thead>
-                    <tr className="flex justify-between">
-                      <th className="w-16">No</th>
-                      <th className="w-72">Product Name</th>
-                      <th>Quantity</th>
-                      <th>Buying Price</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {products.map((product, index) => (
-                      <tr
-                        key={product.id}
-                        className="mt-4 border border-black bg-slate-300"
-                      >
-                        <td className="text-lg uppercase font-bold ml-5">
-                          {index + 1}.
-                        </td>
-                        <td className="text-lg uppercase font-bold">
-                          {product.productname}
-                        </td>
-                        <td className="text-black-600">{product.quantity}</td>
-                        <td className="text-black-600">
-                          {product.buyingprice}
-                        </td>
-                        <td className="flex justify-end">
-                          <button className="mr-4 px-4 py-2 bg-gray-800 text-white-A700 text-xs font-bold uppercase rounded hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
-                            Add to cart
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div> */}
               <div className="h-[900px] overflow-y-auto">
                 <table className="w-full border border-black">
                   <thead>

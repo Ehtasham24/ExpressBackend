@@ -28,6 +28,8 @@ export default function CategorieswithSidebarPage() {
     category_id: "",
   });
 
+  const [deletionData, setDeletionData] = useState({ name: "" });
+
   const fetchData = async () => {
     try {
       const response = await fetch("http://localhost:4000/categories");
@@ -59,9 +61,23 @@ export default function CategorieswithSidebarPage() {
     modal.classList.toggle("flex");
   };
 
+  const handleDeleteToggle = () => {
+    setIsOpen(true);
+    const modal = document.getElementById("delete-modal");
+    modal.classList.toggle("hidden");
+    modal.classList.toggle("flex");
+  };
+
   const handleModalHide = () => {
     setIsOpen(false);
     const modal = document.getElementById("authentication-modal");
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  };
+
+  const DeleteModalHide = () => {
+    setIsOpen(false);
+    const modal = document.getElementById("delete-modal");
     modal.classList.add("hidden");
     modal.classList.remove("flex");
   };
@@ -78,21 +94,41 @@ export default function CategorieswithSidebarPage() {
       });
       console.log(response);
       if (!response.ok) {
-        throw new Error("Failed to submit form");
+        throw new Error("Failed to add product");
       }
-      alert("Form submitted successfully!");
+      alert("Product added successfully!");
     } catch (error) {
-      console.error("Error submitting form:", error);
-      alert("Failed to submit form. Please try again later.");
+      console.error("Error adding product:", error);
+      alert("Failed to add product. Please try again later.");
     }
   };
 
-  const handleChange = (e) => {
+  const handleDeletionProduct = async () => {
+    try {
+      const response = await fetch("http://localhost:4000/product", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(deletionData),
+      });
+      console.log(response);
+      if (!response.ok) {
+        throw new Error("Failed to delete product");
+      }
+      alert("Product deleted successfully");
+    } catch (err) {
+      console.error("Error deleting product:", err);
+      alert("Failed to delete product. Please try again later.");
+    }
+  };
+
+  const handleChange = (e, setter) => {
     // Extract the name and value from the input field that triggered the change event
     const { name, value } = e.target;
 
     // Update the form state (formData) with the new value
-    setFormData((prevFormData) => ({
+    setter((prevFormData) => ({
       ...prevFormData, // Spread the previous state to avoid losing existing data
       [name]: value, // Update the specific field (name) with the new value (value)
     }));
@@ -108,6 +144,7 @@ export default function CategorieswithSidebarPage() {
         />
       </Helmet>
 
+      {/* ADD PRODUCT MODAL */}
       <div
         id="authentication-modal"
         tabIndex="-1"
@@ -161,7 +198,7 @@ export default function CategorieswithSidebarPage() {
                     type="text"
                     name="name"
                     id="product_name"
-                    onChange={handleChange}
+                    onChange={(e) => handleChange(e, setFormData)}
                     className="bg-gray-50 border border-gray-300 mt-4 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     placeholder="Enter product"
                     required
@@ -179,7 +216,7 @@ export default function CategorieswithSidebarPage() {
                     name="buying_price"
                     id="buying_price"
                     placeholder="Enter buying price"
-                    onChange={handleChange}
+                    onChange={(e) => handleChange(e, setFormData)}
                     className="bg-gray-50 border border-gray-300 mt-4 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     required
                   />
@@ -197,7 +234,7 @@ export default function CategorieswithSidebarPage() {
                     name="quantity"
                     id="quantity"
                     placeholder="Enter quantity"
-                    onChange={handleChange}
+                    onChange={(e) => handleChange(e, setFormData)}
                     className="bg-gray-50 border border-gray-800 mt-4 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     required
                   />
@@ -214,7 +251,7 @@ export default function CategorieswithSidebarPage() {
                     name="category_id"
                     id="Category_id"
                     placeholder="Enter category id"
-                    onChange={handleChange}
+                    onChange={(e) => handleChange(e, setFormData)}
                     className="bg-gray-50 border border-gray-300 mt-4 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     required
                   />
@@ -231,6 +268,81 @@ export default function CategorieswithSidebarPage() {
           </div>
         </div>
       </div>
+
+      {/*  DELETE PRODUCT MODAL */}
+
+      <div
+        id="delete-modal"
+        tabIndex="-1"
+        aria-hidden="true"
+        className="hidden opacity-100  overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-white"
+      >
+        <div className="relative p-4 w-full max-w-md max-h-full">
+          <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <div className="flex items-center  bg-white-A700 justify-between p-4  md:p-5 border-b rounded-t dark:border-gray-600">
+              <h3 className="text-xl  opacity-100 z-50  font-semibold text-gray-900 dark:text-white">
+                Delete Product
+              </h3>
+              <button
+                type="button"
+                className="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                data-modal-hide="delete-modal"
+                onClick={DeleteModalHide}
+              >
+                <svg
+                  className="w-3 h-3"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 14 14"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                  />
+                </svg>
+                <span className="sr-only">Close modal</span>
+              </button>
+            </div>
+            <div className="p-4 md:p-5  opacity-100 z-50 background bg-white-A700">
+              <form
+                className="space-y-4"
+                action="#"
+                onSubmit={handleDeletionProduct}
+              >
+                <div>
+                  <label
+                    htmlFor="product_name"
+                    className="block mb-2 text-[1rem] font-semibold text-gray-900 dark:text-white opacity-100 z-50"
+                  >
+                    Product Name
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    id="product_name"
+                    onChange={(e) => handleChange(e, setDeletionData)}
+                    className=" border bg-white-A700  border-gray-300 mt-4 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    placeholder="Enter product"
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full text-white-A700 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5  text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Submit
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="flex flex-col items-center justify-start w-full bg-white-A700">
         <Header className="flex flex-row justify-between items-center w-full p-6 sm:p-5 bg-white-A700" />
 
@@ -243,18 +355,34 @@ export default function CategorieswithSidebarPage() {
           <div className="flex flex-row md:flex-col justify-start items-start w-full gap-8 md:gap-5">
             <div className="flex flex-col items-center justify-start w-[16%] md:w-full gap-8">
               <div className="flex flex-col items-start justify-start w-full gap-[29px]">
-                <div className="flex flex-row justify-between items-center w-full">
+                <div className="flex flex-col gap-5 justify-between items-center w-full">
+                  {/* ADD PRODUCT BUTTON */}
                   <Text as="p" className="!text-gray-800 text-lg">
                     <button
                       data-modal-target="authentication-modal"
                       data-modal-toggle="authentication-modal"
-                      className="block text-white-A700 bg-gray-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      className="block text-white-A700 bg-gray-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-7 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                       type="button"
                       onClick={(e) => {
                         handleModalToggle();
                       }}
                     >
                       Add Product
+                    </button>
+                  </Text>
+
+                  {/* DELETE PRODUCT BUTTON */}
+                  <Text as="p" className="!text-gray-800 text-lg">
+                    <button
+                      data-modal-target="delete-modal"
+                      data-modal-toggle="delete-modal"
+                      className="block text-white-A700 bg-gray-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      type="button"
+                      onClick={(e) => {
+                        handleDeleteToggle();
+                      }}
+                    >
+                      Delete Product
                     </button>
                   </Text>
                 </div>
