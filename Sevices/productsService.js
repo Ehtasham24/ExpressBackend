@@ -49,7 +49,11 @@ const postItems = async (name, buying_price, quantity, category_id) => {
   } catch (err) {
     if (err.code === "23505" && err.constraint === "products_productname_key") {
       throw new Error("Cannot enter duplicate products!");
-    } else throw new Error(err);
+    } else if (
+      err.message ===
+      `duplicate key value violates unique constraint "unique_productname_lower"`
+    );
+    else throw new Error(err);
   }
 };
 
@@ -74,13 +78,14 @@ const updateItemByName = async (name, buying_price, quantity, category_id) => {
   try {
     const result = await pool.query(
       `UPDATE "products"
-        SET buying_price = $2, "quantity" = $3, "category_id" = $4
-        WHERE name ILIKE $1
-        RETURNING id, name, buying_price, "quantity", "category_id"
+        SET buyingprice = $2, "quantity" = $3, "category_id" = $4
+        WHERE productname ILIKE $1
+        RETURNING id, productname, buyingprice, "quantity", "category_id"
         `,
       [`%${name}%`, buying_price, quantity, category_id]
     );
 
+    console.log("backend checkinggggg", result);
     if (result.rowCount === 0) {
       throw new Error({ message: `No item with name: ${name} found` });
     } else return result;
@@ -116,8 +121,10 @@ const deleteItemsByName = async (name) => {
       `DELETE FROM products WHERE productname = $1`,
       [name]
     );
+
+    //console.log("result deleting", result);
     if (result.rowCount === 0) {
-      throw new Error({ message: `No item with name: ${name} found` });
+      throw new Error(`No item with name ${name} found`);
     } else {
       return result;
     }

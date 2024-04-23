@@ -51,10 +51,21 @@ const PostItems = async (req, res) => {
   try {
     const result = await postItems(name, buying_price, quantity, category_id);
 
+    console.log("check", result);
     res.send(result.rows);
   } catch (err) {
-    res.status(500).send({ message: err.message });
-    console.log(err);
+    if (
+      err.message === "Cannot enter duplicate products!" ||
+      err.message ===
+        `duplicate key value violates unique constraint "unique_productname_lower"`
+    ) {
+      res.status(409).json({ error: "Duplicate product found" });
+    } else {
+      res.status(500).send({ message: err.message });
+      console.log(err);
+    }
+    // res.status(500).send({ message: err.message });
+    //console.log(err);
   }
 };
 
@@ -112,6 +123,7 @@ const UpdateItemsByName = async (req, res) => {
       quantity,
       category_id
     );
+    console.log("check update", result);
     res.send({ message: "updated successfully" });
   } catch (err) {
     console.error(err);
