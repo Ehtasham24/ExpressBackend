@@ -63,6 +63,7 @@ export default function ProductListPage() {
 
   const handleSearchInputChange = (event) => {
     console.log("Event:", event); // Check the event object
+    // console.log(event.target.value);
     setSearchValue(event.target.value);
   };
 

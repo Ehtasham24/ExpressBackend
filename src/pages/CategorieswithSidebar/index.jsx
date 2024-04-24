@@ -149,15 +149,15 @@ export default function CategorieswithSidebarPage() {
       });
       console.log(response);
       if (!response.ok) {
-        // console.log("HTTP error status:", response.status); // Log the HTTP status code
-        // console.log("Response body:", await response.text());
-
-        throw new Error("Failed to delete product");
+        if (response.status === 409) {
+          const productName = deletionData.name;
+          throw new Error(`${productName} not found!`);
+        } else throw new Error("Failed to delete product");
       }
       alert("Product deleted successfully");
     } catch (err) {
       console.error("Error deleting product:", err);
-      alert("Failed to delete product. Please try again later.");
+      alert(err.message);
     }
   };
 
