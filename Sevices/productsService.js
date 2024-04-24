@@ -85,7 +85,7 @@ const updateItemByName = async (name, buying_price, quantity, category_id) => {
       [`%${name}%`, buying_price, quantity, category_id]
     );
 
-    console.log("backend checkinggggg", result);
+    console.log(result);
     if (result.rowCount === 0) {
       throw new Error({ message: `No item with name: ${name} found` });
     } else return result;
@@ -130,7 +130,7 @@ const deleteItemsByName = async (name) => {
     }
   } catch (err) {
     console.error(err);
-    throw new Error(`Services error: ${err.message}`);
+    throw new Error(`${err.message}`);
   }
 };
 
