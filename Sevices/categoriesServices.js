@@ -1,8 +1,8 @@
-const { pool } = require("../../Db");
+const { pool } = require("../Db");
 
 const getCategories = async () => {
   try {
-    const result = await pool.query('SELECT * FROM public."Categories"');
+    const result = await pool.query('SELECT * FROM "categories"');
     return result;
   } catch (err) {
     console.log(err);
@@ -14,8 +14,8 @@ const getProductsForCategory = async (id) => {
   try {
     const query = `
       SELECT p.*
-      FROM public."Products" p
-      JOIN public."Categories" c ON p."Category_id" = c.id
+      FROM "products" p
+      JOIN "categories" c ON p."category_id" = c.id
       WHERE c.id = $1;
     `;
     const result = await pool.query(query, [id]);

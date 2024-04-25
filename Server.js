@@ -1,24 +1,30 @@
-const express = require('express');
-const routesProducts=require('./Routes/API/productsRoutes');
-const routesCategories=require('./Routes/API/categoriesRoutes');
-const server=express();
-const Port=6000;
-   
+const express = require("express");
+const routesProducts = require("./Routes/API/productsRoutes");
+const routesCategories = require("./Routes/API/categoriesRoutes");
+const routesSales = require("./Routes/API/salesRoutes");
+const routesCreditorDebtor = require("./Routes/API/creditDebitRoutes");
+const cors = require("cors");
+const server = express();
+const Port = 4000;
 
-const Server= async()=>{
+const Server = async () => {
+  const corsOptions = {
+    origin: "http://localhost:3000",
+  };
 
-try{
-     await server.use(express.json());
-     await server.use(routesProducts);
-     await server.use(routesCategories);
-     await server.listen(Port, ()=> console.log(`Server started at Port ${Port}`));
+  server.use(cors(corsOptions));
 
-}catch (err){
-  console.log(err)
-  process.exit(1);
-
-}
-
-}
+  try {
+    server.use(express.json());
+    server.use(routesProducts);
+    server.use(routesCategories);
+    server.use(routesSales);
+    server.use(routesCreditorDebtor);
+    server.listen(Port, () => console.log(`Server started at Port ${Port}`));
+  } catch (err) {
+    console.log(err);
+    process.exit(1);
+  }
+};
 
 Server();

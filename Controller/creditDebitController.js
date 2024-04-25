@@ -27,10 +27,19 @@ const getRecordByName = async (req, res) => {
   }
 };
 
-const postCredit = async (req, res) => {
-  const { name, amountdue, amountrecieved, credit } = req.body;
+const postRecord = async (req, res) => {
+  const { name, address, email, contactNo, amountPaid, amountRecieved, note } =
+    req.body;
   try {
-    const result = await insertCredit(name, amountdue, amountrecieved, credit);
+    const result = await insertRecord(
+      name,
+      address,
+      email,
+      contactNo,
+      amountPaid,
+      amountRecieved,
+      note
+    );
     res.send(`new entry inserted ${result.row}`);
   } catch (err) {
     console.log(err);
@@ -117,7 +126,7 @@ const deleteDebitByname = async (req, res) => {
 module.exports = {
   getAllRecords,
   getRecordByName,
-  postCredit,
+  postRecord,
   updateCreditByname,
   deleteCreditByname,
   getDebitByname,

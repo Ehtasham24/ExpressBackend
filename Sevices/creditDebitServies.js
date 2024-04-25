@@ -5,7 +5,6 @@ const fetchAllRecords = async () => {
     const result = await pool.query(
       `SELECT * FROM public.transaction_party_info`
     );
-    // const resultCredit = await pool.query(`SELECT * FROM public."credit"`);
     return result;
   } catch (err) {
     console.log("services error", err);
@@ -23,16 +22,54 @@ const fetchRecordByName = async (name) => {
     console.log("services error", err);
   }
 };
-const insertCredit = async (name, amountdue, amountrecieved, credit) => {
+const insertRecord = async (
+  name,
+  address,
+  email,
+  contactNo,
+  amountPaid,
+  amountRecieved,
+  note
+) => {
   try {
-    const result = await pool.query(
-      `INSERT INTO public.credit(
-    name, amount_due, amount_received, amount_pending, total_amount_id)
-  VALUES ($1, $2, $3, $4, $5,)
+    const resultParty = await pool.query(
+      `INSERT INTO "transaction_party_info"(
+    name, address, email, contactNo)
+  VALUES ($1, $2, $3, $4 )
 `,
-      [name, amountdue, amountrecieved, credit]
+      [name, address, email, contactNo]
     );
-    return result;
+
+    const resultSearch = await pool.query(
+      `Select * FROM "trasaction_history ORDER BY id ASC"`
+    );
+    let totalAmount, startingStatement, date, modeOfTransaction;
+    if (resultSearch.rowCount == 0) {
+      totalAmount = 0;
+      startingStatement = 0;
+    } else {
+      startingStatement = resultSearch.rowCount[0].total_amount;
+      totalAmount = startingStatement + (amountPaid - amountRecieved);
+      if (totalAmount > 0) {
+        modeOfTransaction = `Credit`;
+      } else modeOfTransaction = `Debit`;
+    }
+    const resultTransactionHistory = await pool.query(
+      `INSERT INTO "transaction_history" (total_amount, amount_paid, amount_recieved, date, starting_statement, 
+      mode_of_transaction, note, transaction_party_info) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [
+        totalAmount,
+        amountPaid,
+        amountRecieved,
+        date,
+        startingStatement,
+        modeOfTransaction,
+        note,
+        resultSearch.rows[0].id,
+      ]
+    );
+
+    return { resultParty, resultTransactionHistory };
   } catch (err) {
     console.log("services error", err);
   }

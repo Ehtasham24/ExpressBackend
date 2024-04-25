@@ -3,6 +3,7 @@ const routes = express.Router();
 const {
   getAllRecords,
   getRecordByName,
+  postRecord,
   updateCreditByname,
   deleteCreditByname,
   postCredit,
@@ -14,6 +15,7 @@ const {
 
 routes.get("/creditordebtor", getAllRecords);
 routes.post("/creditordebtor", getRecordByName);
+routes.post("/creditordebtor", postRecord);
 // routes.post("./credit", getCreditByname);
 // routes.post("./credit", postCredit);
 // routes.put("./credit", updateCreditByname);
