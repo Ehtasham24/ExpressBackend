@@ -18,7 +18,7 @@ routes.post("/product", PostItems);
 routes.delete("/product/:id", DeleteItems);
 routes.delete("/product", DeleteItemsByName);
 routes.put("/products/:id", UpdateItems);
-routes.put("/products", UpdateItemsByName);
+routes.put("/updateproducts", UpdateItemsByName);
 
 // routes.get('/:tableId', GetItems);
 // routes.post('/:tableId',GetItemsByName);

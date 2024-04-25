@@ -8,8 +8,8 @@ require("dotenv").config({
 const pool = new Pool({
   user: "postgres",
   host: "localhost",
-  database: "POS",
-  password: "ehtasham24",
+  database: "pos_DB",
+  password: "dxtx998",
   port: 5432,
   // rowMode: "array",
 });
