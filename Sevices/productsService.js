@@ -78,17 +78,18 @@ const updateItemByName = async (name, buying_price, quantity, category_id) => {
       `UPDATE "products"
         SET buying_price = $2, "quantity" = $3, "category_id" = $4
         WHERE name ILIKE $1
-        RETURNING id, name, buying_price, "quantity", "category_id"
-        `,
+        RETURNING "id", "name", "buying_price", "quantity", "category_id"
+      `,
       [`%${name}%`, buying_price, quantity, category_id]
     );
 
     if (result.rowCount === 0) {
-      throw new Error({ message: `No item with name: ${name} found` });
-    } else return result;
+      throw new Error(`No item with name: ${name} found`);
+    }
+
+    return result;
   } catch (err) {
-    console.log(err);
-    throw new Error({ message: err.message });
+    throw err;
   }
 };
 
