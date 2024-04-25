@@ -28,50 +28,55 @@ const insertRecord = async (
   email,
   contactNo,
   amountPaid,
-  amountRecieved,
+  amountReceived,
   note
 ) => {
   try {
     const resultParty = await pool.query(
-      `INSERT INTO "transaction_party_info"(
-    name, address, email, contactNo)
-  VALUES ($1, $2, $3, $4 )
-`,
+      `INSERT INTO public.transaction_party_info(
+        name, address, email, contactNo)
+        VALUES ($1, $2, $3, $4)
+        RETURNING id`,
       [name, address, email, contactNo]
     );
+    console.log(resultParty);
 
     const resultSearch = await pool.query(
-      `Select * FROM "trasaction_history ORDER BY id ASC"`
+      `SELECT * FROM "transaction_history" ORDER BY id ASC`
     );
-    let totalAmount, startingStatement, date, modeOfTransaction;
+    console.log(resultParty);
+
+    let totalAmount, startingStatement, modeOfTransaction;
+    const currentDate = new Date();
+    const date = currentDate.toLocaleString();
+
     if (resultSearch.rowCount == 0) {
       totalAmount = 0;
       startingStatement = 0;
-    } else {
-      startingStatement = resultSearch.rowCount[0].total_amount;
-      totalAmount = startingStatement + (amountPaid - amountRecieved);
-      if (totalAmount > 0) {
-        modeOfTransaction = `Credit`;
-      } else modeOfTransaction = `Debit`;
     }
+    startingStatement = resultSearch.rows[0].total_amount;
+    totalAmount = startingStatement + (amountPaid - amountReceived);
+    modeOfTransaction = totalAmount > 0 ? "Credit" : "Debit";
+
     const resultTransactionHistory = await pool.query(
-      `INSERT INTO "transaction_history" (total_amount, amount_paid, amount_recieved, date, starting_statement, 
+      `INSERT INTO "transaction_history" (total_amount, amount_paid, amount_received, date, starting_statement, 
       mode_of_transaction, note, transaction_party_info) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
       [
         totalAmount,
         amountPaid,
-        amountRecieved,
+        amountReceived,
         date,
         startingStatement,
         modeOfTransaction,
         note,
-        resultSearch.rows[0].id,
+        resultParty.rows[0].id,
       ]
     );
-
+    console.log(resultParty, resultTransactionHistory);
     return { resultParty, resultTransactionHistory };
   } catch (err) {
     console.log("services error", err);
+    throw err;
   }
 };
 
@@ -178,7 +183,7 @@ const deleteDebitByName = async (name) => {
 module.exports = {
   fetchAllRecords,
   fetchRecordByName,
-  insertCredit,
+  insertRecord,
   updateCreditByName,
   deleteCreditByName,
   fetchDebitByName,

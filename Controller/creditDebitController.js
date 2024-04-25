@@ -1,7 +1,7 @@
 const {
   fetchAllRecords,
   fetchRecordByName,
-  insertCredit,
+  insertRecord,
   updateCreditByName,
   deleteCreditByName,
 } = require("../Sevices/creditDebitServies");
@@ -40,7 +40,7 @@ const postRecord = async (req, res) => {
       amountRecieved,
       note
     );
-    res.send(`new entry inserted ${result.row}`);
+    res.send(result);
   } catch (err) {
     console.log(err);
     res.status(400).send(err);
