@@ -1,20 +1,22 @@
-const { pool } = require("../../Db");
+const { pool } = require("../Db");
 
 const fetchAllRecords = async () => {
   try {
-    const resultDebit = await pool.query(`SELECT * FROM public."debit"`);
-    const resultCredit = await pool.query(`SELECT * FROM public."credit"`);
-    return { Debit: resultDebit.rows, Credit: resultCredit.rows };
+    const result = await pool.query(
+      `SELECT * FROM public.transaction_party_info`
+    );
+    // const resultCredit = await pool.query(`SELECT * FROM public."credit"`);
+    return result;
   } catch (err) {
     console.log("services error", err);
   }
 };
 
-const fetchCreditByName = async (name) => {
+const fetchRecordByName = async (name) => {
   try {
     const result = await pool.query(
-      `SELECT * FROM public."credit" WHERE name ILIKE $1`,
-      [name]
+      `SELECT * FROM "transaction_party_info" WHERE name ILIKE $1`,
+      ["%" + name + "%"]
     );
     return result;
   } catch (err) {
@@ -138,7 +140,7 @@ const deleteDebitByName = async (name) => {
 
 module.exports = {
   fetchAllRecords,
-  fetchCreditByName,
+  fetchRecordByName,
   insertCredit,
   updateCreditByName,
   deleteCreditByName,

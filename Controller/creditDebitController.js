@@ -1,6 +1,6 @@
 const {
   fetchAllRecords,
-  fetchCreditByName,
+  fetchRecordByName,
   insertCredit,
   updateCreditByName,
   deleteCreditByName,
@@ -9,17 +9,17 @@ const {
 const getAllRecords = async (req, res) => {
   try {
     const result = await fetchAllRecords();
-    res.send(result);
+    res.send(result.rows);
   } catch (err) {
     console.log(err);
     res.status(400).send(err);
   }
 };
 
-const getCreditByname = async (req, res) => {
+const getRecordByName = async (req, res) => {
   const { name } = req.body;
   try {
-    const result = await fetchCreditByName(name);
+    const result = await fetchRecordByName(name);
     res.send(result.rows);
   } catch (err) {
     console.log(err);
@@ -116,7 +116,7 @@ const deleteDebitByname = async (req, res) => {
 
 module.exports = {
   getAllRecords,
-  getCreditByname,
+  getRecordByName,
   postCredit,
   updateCreditByname,
   deleteCreditByname,
