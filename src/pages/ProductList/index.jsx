@@ -103,6 +103,10 @@ export default function ProductListPage() {
               style={{ border: "1px solid black" }}
               className="h-10 w-96"
             />
+
+            {/*      {SEARCH BAR STARTS} */}
+
+            {/*      {SEARCH BAR ENDS} */}
           </div>
           <div className="flex flex-row md:flex-col justify-start items-start w-full gap-8 md:gap-5">
             <div className="flex flex-col items-start justify-start w-[16%] md:w-full gap-8">
