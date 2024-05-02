@@ -4,18 +4,18 @@ const {
   getAllRecords,
   getRecordByName,
   postRecord,
-  updateCreditByname,
-  deleteCreditByname,
-  postCredit,
-  getDebitByname,
-  postDebit,
-  updateDebitByname,
-  deleteDebitByname,
+  // updateCreditByname,
+  // deleteCreditByname,
+  // postCredit,
+  // getDebitByname,
+  // postDebit,
+  // updateDebitByname,
+  // deleteDebitByname,
 } = require("../../Controller/creditDebitController");
 
 routes.get("/creditordebtor", getAllRecords);
 routes.post("/creditordebtor", getRecordByName);
-routes.post("/creditordebtor", postRecord);
+routes.post("/creditordebtors", postRecord);
 // routes.post("./credit", getCreditByname);
 // routes.post("./credit", postCredit);
 // routes.put("./credit", updateCreditByname);

@@ -40,7 +40,7 @@ const postRecord = async (req, res) => {
       amountRecieved,
       note
     );
-    res.send(result);
+    res.send(`Successfully inserted`);
   } catch (err) {
     console.log(err);
     res.status(400).send(err);
