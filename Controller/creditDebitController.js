@@ -19,11 +19,11 @@ const getAllRecords = async (req, res) => {
 const getRecordByName = async (req, res) => {
   const { name } = req.body;
   try {
-    const result = await fetchRecordByName(name);
+    const result = await fetchRecordByName(name, 1);
     res.send(result.rows);
   } catch (err) {
     console.log(err);
-    res.status(400).send(err);
+    res.status(400).send(err.message);
   }
 };
 

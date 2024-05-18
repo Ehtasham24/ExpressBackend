@@ -5,21 +5,42 @@ const fetchAllRecords = async () => {
     const result = await pool.query(
       `SELECT * FROM public.transaction_party_info`
     );
-    return result;
   } catch (err) {
     console.log("services error", err);
   }
 };
 
-const fetchRecordByName = async (name) => {
+const fetchRecordByName = async (name, flg) => {
   try {
-    const result = await pool.query(
-      `SELECT id FROM "transaction_party_info" WHERE name ILIKE $1 `,
-      ["%" + name + "%"]
-    );
+    let result;
+    if (flg === 1) {
+      result = await pool.query(
+        `
+      SELECT tpi.*, th.*
+      FROM "transaction_party_info" AS tpi
+      LEFT JOIN "transaction_history" AS th ON tpi.id = th.transaction_party_info_id
+      WHERE tpi.name ILIKE $1
+      ORDER BY tpi.id, th.date DESC;
+    `,
+        ["%" + name + "%"]
+      );
+      console.log(result.rowCount);
+      if (result.rowCount === 0) {
+        console.log(`No name was found with name ${name}`);
+        throw new Error(`No "${name}" was found with in the record`);
+      }
+    } else {
+      result = await pool.query(
+        `SELECT id FROM "transaction_party_info" WHERE name ILIKE $1 `,
+        ["%" + name + "%"]
+      );
+
+      console.log(result.rows);
+    }
     return result;
   } catch (err) {
     console.log("services error", err);
+    throw err;
   }
 };
 
@@ -98,7 +119,7 @@ const insertRecord = async (
       flag = 0;
     } else {
       // Check if the name is present in the transaction_party_info table
-      const nameCheckParty = await fetchRecordByName(name);
+      const nameCheckParty = await fetchRecordByName(name, 0);
       if (nameCheckParty.rowCount === 0) {
         // Insert new name into both tables if not present
         await insertNewRecord(
@@ -160,109 +181,6 @@ const insertRecord = async (
     throw err;
   }
 };
-
-// const insertQuery = async (name, address, email, contactNo) => {
-//   const insertResultParty = await pool.query(
-//     `INSERT INTO public.transaction_party_info(
-//     name, address, email, contact_no)
-//     VALUES ($1, $2, $3, $4)
-//     RETURNING id`,
-//     [name, address, email, contactNo]
-//   );
-//   console.log(name, address, email, contactNo);
-//   console.log(insertResultParty.id);
-//   return insertResultParty;
-// };
-
-// const insertQueryForTransaction = async (flag, name) => {
-//   if (flag == 0 || flag == 1) {
-//     const resultSearch = await pool.query(
-//       `SELECT * FROM "transaction_history" WHERE id=$1 ORDER BY id DESC LIMIT 1`,
-//       [insertQuery.rows.id]
-//     );
-//   } else {
-//     const searchingIdForParty = await fetchRecordByName(name);
-//   }
-
-// };
-
-// const insertRecord = async (
-//   name,
-//   address,
-//   email,
-//   contactNo,
-//   amountPaid,
-//   amountReceived,
-//   note
-// ) => {
-//   try {
-//     const rowCheckParty = await fetchAllRecords();
-//     const nameCheckParty = await fetchRecordByName(name);
-//     let flag = 0;
-
-//     if (rowCheckParty.rowCount === 0) {
-//       const insertQueryResult = await insertQuery(
-//         name,
-//         address,
-//         email,
-//         contactNo
-//       );
-//       flag = 0;
-//     } else if (nameCheckParty.rows.name !== name) {
-//       const insertQueryResult = await insertQuery(
-//         name,
-//         address,
-//         email,
-//         contactNo
-//       );
-//       flag = 1;
-//     } else {
-//       flag = 2;
-//       const resultSearch = await pool.query(
-//         `SELECT * FROM "transaction_history" WHERE id=$1 ORDER BY id DESC LIMIT 1`,
-//         [insertQuery.rows.id]
-//       );
-
-//       let totalAmount, startingStatement, modeOfTransaction;
-//       const currentDate = new Date();
-//       const date = currentDate.toLocaleString();
-//       if (
-//         resultSearch.transaction_party_info_id !== insertQuery.rows.id ||
-//         resultSearch.transaction_party_info_id !== nameCheckParty(name).rows.id
-//       ) {
-//         totalAmount = amountPaid - amountReceived;
-//         startingStatement = 0;
-//       } else {
-//         const latestTransaction = resultSearch.rows[0];
-//         startingStatement = latestTransaction.total_amount;
-//         totalAmount = startingStatement + (amountPaid - amountReceived);
-//       }
-
-//       modeOfTransaction = totalAmount > 0 ? "Credit" : "Debit";
-//       const resultTransactionHistory = await pool.query(
-//         `INSERT INTO "transaction_history" (total_amount, amount_paid, amount_received, date, starting_statement,
-//       mode_of_transaction, note, transaction_party_info_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-//         [
-//           totalAmount,
-//           amountPaid,
-//           amountReceived,
-//           date,
-//           startingStatement,
-//           modeOfTransaction,
-//           note,
-//           resultParty.rows[0].id,
-//         ]
-//       );
-
-//       console.log(resultParty, resultTransactionHistory);
-
-//       return { resultParty, resultTransactionHistory };
-//     }
-//   } catch (err) {
-//     console.log("services error", err);
-//     throw new Error(err);
-//   }
-// };
 
 // const updateCreditByName = async (
 //   name,
