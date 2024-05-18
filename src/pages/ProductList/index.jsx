@@ -1,6 +1,10 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { addCart } from "../../cart/cartSlice";
+import Footer from "../../components/Footer/index";
+import store from "../../store/store";
 import {
   Text,
   Input,
@@ -72,6 +76,14 @@ export default function ProductListPage() {
     fetchProducts(prodNum);
   }, [searchValue]);
 
+  const dispatch = useDispatch();
+  const cart = useSelector((store) => store.cart.carts);
+
+  const cartAddition = (product) => {
+    dispatch(addCart(product));
+    console.log(store.getState());
+  };
+
   return (
     <>
       <Helmet>
@@ -131,117 +143,6 @@ export default function ProductListPage() {
                 </div>
               </div>
               <div className="h-px w-full bg-blue_gray-100" />
-              <div className="flex flex-col items-start justify-start w-[68%] md:w-full gap-[29px]">
-                <Text as="p" className="!text-gray-800">
-                  Filter by Price
-                </Text>
-                <div className="flex flex-col items-start justify-start w-full gap-6">
-                  <CheckBox
-                    shape="square"
-                    name="allprice"
-                    label="All Price"
-                    id="allprice"
-                    className="gap-4 text-left"
-                  />
-                  <CheckBox
-                    color="gray_800"
-                    variant="fill"
-                    shape="square"
-                    name="vector_eight"
-                    label="$100 - $250"
-                    id="vectoreight"
-                    className="gap-4 text-left"
-                  />
-                  <CheckBox
-                    shape="square"
-                    name="square"
-                    label="$250 - $500"
-                    id="square"
-                    className="gap-4 text-left"
-                  />
-                  <CheckBox
-                    shape="square"
-                    name="square_one"
-                    label="$750 - $1.000"
-                    id="squareone"
-                    className="gap-4 text-left"
-                  />
-                  <CheckBox
-                    shape="square"
-                    name="square_two"
-                    label="$1000 - $1.500"
-                    id="squaretwo"
-                    className="gap-4 text-left"
-                  />
-                </div>
-              </div>
-              <div className="h-px w-full bg-blue_gray-100" />
-              <div className="flex flex-col items-start justify-start w-[79%] md:w-full gap-[29px]">
-                <Text as="p" className="!text-gray-800">
-                  Filter by Rating
-                </Text>
-                <div className="flex flex-col items-start justify-start w-full gap-4">
-                  <div className="flex flex-row justify-start w-[34%] md:w-full gap-4">
-                    <div className="h-[24px] w-[24px] border-blue_gray-100 border-[3px] border-solid" />
-                    <div className="flex flex-col items-center justify-start h-[24px] w-[24px]">
-                      <Img
-                        src="images/img_star_1_1.svg"
-                        alt="image_one"
-                        className="h-[24px] w-[24px]"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-row justify-start w-[50%] md:w-full gap-4">
-                    <div className="h-[24px] w-[24px] border-blue_gray-100 border-[3px] border-solid" />
-                    <div className="flex flex-row justify-start w-[59%] gap-2">
-                      <Img
-                        src="images/img_star_1_2.svg"
-                        alt="image_two"
-                        className="h-[24px] w-[24px]"
-                      />
-                      <Img
-                        src="images/img_star_2_24x24.svg"
-                        alt="image_three"
-                        className="h-[24px] w-[24px]"
-                      />
-                    </div>
-                  </div>
-                  <RatingBar
-                    value={1}
-                    isEditable={true}
-                    color="#fae952"
-                    activeColor="#fae952"
-                    size={24}
-                    starCount={2}
-                    className="flex justify-between"
-                  />
-                  <div className="flex flex-row justify-start gap-4">
-                    <Button size="xs" shape="square" className="w-[24px]">
-                      <Img src="images/img_checkedbox.svg" />
-                    </Button>
-                    <RatingBar
-                      value={4}
-                      isEditable={true}
-                      color="#fae952"
-                      activeColor="#fae952"
-                      size={24}
-                      starCount={4}
-                      className="flex justify-between"
-                    />
-                  </div>
-                  <div className="flex flex-row justify-start w-full gap-4">
-                    <div className="h-[24px] w-[24px] border-blue_gray-100 border-[3px] border-solid" />
-                    <RatingBar
-                      value={5}
-                      isEditable={true}
-                      color="#fae952"
-                      activeColor="#fae952"
-                      size={24}
-                      className="flex justify-between"
-                    />
-                  </div>
-                </div>
-              </div>
             </div>
             <div className="flex flex-col items-center justify-start w-[84%] md:w-full gap-[29px]">
               <div className="h-[900px] overflow-y-auto">
@@ -274,7 +175,10 @@ export default function ProductListPage() {
                           {product.buyingprice}
                         </td>
                         <td className="flex justify-end">
-                          <button className="mr-4 px-4 py-2 mt-2 bg-gray-800 text-white-A700 text-xs font-bold uppercase rounded hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
+                          <button
+                            onClick={() => cartAddition(product)}
+                            className="mr-4 px-4 py-2 mt-2 bg-gray-800 text-white-A700 text-xs font-bold uppercase rounded hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
+                          >
                             Add to cart
                           </button>
                         </td>
@@ -286,137 +190,7 @@ export default function ProductListPage() {
             </div>
           </div>
         </div>
-        <footer className="flex justify-center items-center w-full mt-[100px]">
-          <div className="flex flex-col items-center justify-center w-full gap-[97px] p-[30px] sm:p-5 bg-gray-800">
-            <div className="flex flex-row md:flex-col justify-between items-start w-full mt-[31px] md:gap-10 md:px-5 max-w-[1632px]">
-              <div className="flex flex-col items-start justify-start w-[26%] md:w-full gap-[31px]">
-                <div className="flex flex-row justify-start items-start gap-2">
-                  <Img
-                    src="images/img_group_19_white_a700.svg"
-                    alt="image_four"
-                    className="h-[24px] mt-1"
-                  />
-                  <Heading size="xs" as="h4" className="!text-white-A700">
-                    Elliye{" "}
-                  </Heading>
-                </div>
-                <div className="flex flex-row justify-start">
-                  <Text as="p" className="!font-normal leading-8">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor .
-                  </Text>
-                </div>
-                <div className="flex flex-col items-center justify-start w-full gap-4">
-                  <div className="flex flex-row justify-start items-center w-full gap-2 py-0.5">
-                    <Img
-                      src="images/img_call.svg"
-                      alt="call_one"
-                      className="h-[24px] w-[24px]"
-                    />
-                    <Text as="p" className="!text-white-A700 !font-normal">
-                      +1234567890
-                    </Text>
-                  </div>
-                  <div className="flex flex-row justify-start items-center w-full gap-2">
-                    <Img
-                      src="images/img_email_white_a700.svg"
-                      alt="email_three"
-                      className="h-[24px] w-[24px]"
-                    />
-                    <Text
-                      as="p"
-                      className="mt-0.5 !text-white-A700 !font-normal"
-                    >
-                      elliye@support.com
-                    </Text>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-row md:flex-col justify-start items-start w-[58%] md:w-full gap-8 md:gap-5">
-                <div className="flex flex-col items-start justify-start w-[27%] md:w-full gap-[33px]">
-                  <Heading size="xs" as="h4" className="!text-white-A700">
-                    Product Links
-                  </Heading>
-                  <div className="flex flex-col items-start justify-center gap-[15px]">
-                    <Text as="p" className="mt-px !font-normal">
-                      Categories
-                    </Text>
-                    <Text as="p" className="!font-normal">
-                      New Arrival
-                    </Text>
-                    <Text as="p" className="!font-normal">
-                      Features
-                    </Text>
-                    <Text as="p" className="!font-normal">
-                      Collections
-                    </Text>
-                  </div>
-                </div>
-                <div className="flex flex-col items-start justify-center w-[27%] md:w-full gap-[29px]">
-                  <Heading
-                    size="xs"
-                    as="h4"
-                    className="mt-0.5 !text-white-A700"
-                  >
-                    Company
-                  </Heading>
-                  <div className="flex flex-col items-start justify-start">
-                    <Text as="p" className="!font-normal">
-                      About
-                    </Text>
-                    <Text as="p" className="mt-3 !font-normal">
-                      Blog
-                    </Text>
-                    <a href="#" className="mt-[7px]">
-                      <Text as="p" className="!font-normal">
-                        Careers
-                      </Text>
-                    </a>
-                    <Text as="p" className="mt-[9px] !font-normal">
-                      Services
-                    </Text>
-                    <a href="#" className="mt-3">
-                      <Text as="p" className="!font-normal">
-                        Privacy Policy
-                      </Text>
-                    </a>
-                    <a href="#" className="mt-[7px]">
-                      <Text as="p" className="!font-normal">
-                        Terms of service
-                      </Text>
-                    </a>
-                  </div>
-                </div>
-                <div className="flex flex-col items-start justify-start w-[41%] md:w-full gap-[30px]">
-                  <Heading size="xs" as="h4" className="!text-white-A700">
-                    Join our Newsletter
-                  </Heading>
-                  <Text as="p" className="!font-normal">
-                    Drop your email below to get update, promotions, coupons,
-                    and more!
-                  </Text>
-                  <Input
-                    color="gray_800"
-                    variant="fill"
-                    shape="square"
-                    type="email"
-                    name="email"
-                    placeholder="Enter your email"
-                    suffix={
-                      <div className="flex justify-center items-center w-[60px] h-[60px] bg-white-A700">
-                        <Img src="images/img_arrow_gray_800.svg" alt="Arrow" />
-                      </div>
-                    }
-                    className="w-full sm:w-full tracking-[0.36px] border-white-A700 border"
-                  />
-                </div>
-              </div>
-            </div>
-            <Text size="xs" as="p" className="!text-blue_gray-100">
-              Copyright © 2021 Elliye. All Right Reseved
-            </Text>
-          </div>
-        </footer>
+        <Footer className="flex justify-center items-center w-full mt-[85px] p-[30px] sm:p-5 bg-gray-800" />
       </div>
     </>
   );

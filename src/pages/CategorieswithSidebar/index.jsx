@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Helmet } from "react-helmet";
 import {
   Text,
@@ -11,15 +12,22 @@ import {
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import { useNavigate } from "react-router-dom";
-/* import { LiaPrescriptionBottleSolid } from "react-icons/lia";
-  import { TbToolsKitchen } from "react-icons/tb";
-  import { IoHomeOutline } from "react-icons/io5";
-  import { MdOutlineKitchen } from "react-icons/md"; */
+import {
+  increaseQuantity,
+  decreaseQuantity,
+  removeCart,
+} from "../../cart/cartSlice";
 
 export default function CategorieswithSidebarPage() {
   const [categories, setCategories] = useState([]);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const toggleCart = () => {
+    setIsCartOpen(!isCartOpen);
+  };
 
   const [formData, setFormData] = useState({
     name: "",
@@ -172,6 +180,34 @@ export default function CategorieswithSidebarPage() {
     }));
   };
 
+  // Inside your component or wherever you want to dispatch the action
+  const dispatch = useDispatch();
+
+  const checkOut = () => {
+    setIsCartOpen(true);
+  };
+
+  const closeCheckout = () => {
+    setIsCartOpen(false);
+  };
+
+  const handleIncrease = (id) => {
+    dispatch(increaseQuantity({ id }));
+    // dispatch(updatePrice({ id, price: price * 2 }));
+  };
+
+  const handleDecrease = (id) => {
+    const currentItem = cart.find((item) => item.id === id); // Find the item in the cart
+    if (currentItem && currentItem.quantity > 0) {
+      dispatch(decreaseQuantity({ id }));
+      if (currentItem.quantity === 1) {
+        // If the quantity becomes 0 after decreasing, remove the item from the cart
+        dispatch(removeCart({ id }));
+      }
+    }
+  };
+
+  const cart = useSelector((store) => store.cart.carts);
   return (
     <>
       <Helmet>
@@ -386,7 +422,7 @@ export default function CategorieswithSidebarPage() {
         id="update-modal"
         tabIndex="-1"
         aria-hidden="true"
-        className="hidden opacity-100  overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-white"
+        className="hidden opacity-100 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-white"
       >
         <div className="relative p-4 w-full max-w-md max-h-full">
           <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -516,7 +552,7 @@ export default function CategorieswithSidebarPage() {
         >
           <Heading as="h1">Categories</Heading>
           <div className="flex flex-row md:flex-col justify-start items-start w-full gap-8 md:gap-5">
-            <div className="flex flex-col items-center justify-start w-[16%] md:w-full gap-8">
+            <div className="flex flex-col items-center justify-start w-[16%] md:w-full gap-4">
               <div className="flex flex-col items-start justify-start w-full gap-[29px]">
                 <div className="flex flex-col gap-5 justify-between items-center w-full">
                   {/* ADD PRODUCT BUTTON */}
@@ -554,7 +590,7 @@ export default function CategorieswithSidebarPage() {
                     <button
                       data-modal-target="update-modal"
                       data-modal-toggle="update-modal"
-                      className="block text-white-A700 bg-gray-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      className="block text-white-A700 bg-gray-700 mb-5 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                       type="button"
                       onClick={(e) => {
                         handleUpdateToggle();
@@ -564,142 +600,192 @@ export default function CategorieswithSidebarPage() {
                     </button>
                   </Text>
                 </div>
-                {/*    <div className="flex flex-col items-start justify-start w-[68%] md:w-full gap-6">
-                    <CheckBox
-                      shape="square"
-                      name="allprice"
-                      label="All Price"
-                      id="allprice"
-                      className="gap-4 text-left"
-                    />
-                    <div className="flex flex-row justify-start items-center gap-4">
-                      <Button size="xs" shape="square" className="w-[24px]">
-                        <Img src="images/img_checkedbox.svg" />
-                      </Button>
-                      <Text as="p" className="!text-gray-800 !font-normal">
-                        $100 - $250
-                      </Text>
-                    </div>
-                    <CheckBox
-                      shape="square"
-                      name="square"
-                      label="$250 - $500"
-                      id="square"
-                      className="gap-4 text-left"
-                    />
-                    <CheckBox
-                      shape="square"
-                      name="square_one"
-                      label="$750 - $1.000"
-                      id="squareone"
-                      className="gap-4 text-left"
-                    />
-                    <CheckBox
-                      shape="square"
-                      name="square_two"
-                      label="$1000 - $1.500"
-                      id="squaretwo"
-                      className="gap-4 text-left"
-                    />
-                  </div> */}
               </div>
-              <div className="h-px w-full bg-blue_gray-100" />
+              <div className="h-px w-full bg-blue_gray-100 " />
               <div className="flex flex-col items-start justify-start w-full gap-[29px]">
-                <div className="flex flex-row justify-between items-center w-full">
-                  <Text as="p" className="mt-px !text-gray-800">
-                    Filter by Rating
-                  </Text>
-                  <Img
-                    src="images/img_arrow_down.svg"
-                    alt="arrowdown_three"
-                    className="h-[24px] w-[24px]"
-                  />
-                </div>
-                <div className="flex flex-col items-start justify-start w-[79%] md:w-full gap-4">
-                  <div className="flex flex-row justify-start w-[34%] md:w-full gap-4">
-                    <div className="h-[24px] w-[24px] border-blue_gray-100 border-[3px] border-solid" />
-                    <div className="flex flex-col items-center justify-start h-[24px] w-[24px]">
-                      <Img
-                        src="images/img_star_1.svg"
-                        alt="image_one"
-                        className="h-[24px] w-[24px]"
-                      />
+                {/*   displaying cart */}
+
+                <div className="ml-16">
+                  <h2 className="ml-3 font-extrabold text-xl">Cart Items</h2>
+                  <ul className="mt-3">
+                    {cart.map((item) => (
+                      <li
+                        key={item.id}
+                        className="w-auto pl-5 pr-5 text-lg mb-2 bg-gray-200 "
+                      >
+                        {item.productname}
+                      </li>
+                    ))}
+                  </ul>
+                  {cart.length > 0 && (
+                    <Text as="p" className="!text-gray-800 text-sm">
+                      <button
+                        className="mt-7 ml-3  block text-white-A700 bg-gray-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        type="button"
+                        onClick={checkOut}
+                      >
+                        Checkout
+                      </button>
+                    </Text>
+                  )}
+
+                  {/* 
+                  trying new feature  */}
+                  {isCartOpen && (
+                    <div
+                      className="relative z-10"
+                      aria-labelledby="slide-over-title"
+                      role="dialog"
+                      aria-modal="true"
+                    >
+                      <div className="fixed inset-0   bg-white-A700  bg-opacity-75 transition-opacity"></div>
+
+                      <div className="fixed inset-0 overflow-hidden">
+                        <div className="absolute inset-0 overflow-hidden">
+                          <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+                            <div className="pointer-events-auto w-screen max-w-md">
+                              <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+                                <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6  bg-white-A700">
+                                  <div className="flex items-start justify-between">
+                                    <h2
+                                      className="text-lg font-medium text-gray-900"
+                                      id="slide-over-title"
+                                    >
+                                      Shopping cart
+                                    </h2>
+                                    <div className="ml-3 flex h-7 items-center">
+                                      <button
+                                        type="button"
+                                        className="relative -m-2 p-2  bg-white-A700 hover:text-gray-500"
+                                        onClick={closeCheckout}
+                                      >
+                                        <span className="absolute -inset-0.5"></span>
+                                        <span className="sr-only">
+                                          Close panel
+                                        </span>
+                                        <svg
+                                          className="h-6 w-6"
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                          strokeWidth="1.5"
+                                          stroke="currentColor"
+                                          aria-hidden="true"
+                                        >
+                                          <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M6 18L18 6M6 6l12 12"
+                                          />
+                                        </svg>
+                                      </button>
+                                    </div>
+                                  </div>
+
+                                  <div className="mt-8">
+                                    <div className="flow-root">
+                                      <ul
+                                        role="list"
+                                        className="-my-6 divide-y divide-gray-200"
+                                      >
+                                        {cart.map((item) => (
+                                          <li className="flex py-6">
+                                            <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                                              <img
+                                                src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg"
+                                                alt="Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch."
+                                                className="h-full w-full object-cover object-center"
+                                              />
+                                            </div>
+
+                                            <div className="ml-4 flex flex-1 flex-col">
+                                              <div>
+                                                <div className="flex justify-between text-base font-medium text-gray-900">
+                                                  <h3>
+                                                    <a href="#">
+                                                      {item.productname}
+                                                    </a>
+                                                  </h3>
+                                                  {/*   <p className="ml-4">
+                                                    {item.buyingprice}
+                                                  </p> */}
+                                                </div>
+                                              </div>
+                                              <div className="flex flex-1 items-end justify-between text-sm">
+                                                <h2>Quantity: </h2>
+
+                                                <button
+                                                  onClick={() =>
+                                                    handleDecrease(item.id)
+                                                  }
+                                                >
+                                                  -
+                                                </button>
+                                                <p className="text-black">
+                                                  {item.quantity}
+                                                </p>
+                                                <button
+                                                  onClick={() =>
+                                                    handleIncrease(item.id)
+                                                  }
+                                                >
+                                                  +
+                                                </button>
+                                              </div>
+                                              <div className="flex mt-3">
+                                                <button
+                                                  type="button"
+                                                  className="font-medium text-indigo-600 hover:text-indigo-500 text-sm"
+                                                >
+                                                  Remove
+                                                </button>
+                                              </div>
+                                            </div>
+                                          </li>
+                                        ))}
+
+                                        {/* More products... */}
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
+                                  <div className="flex justify-between text-base font-medium text-gray-900">
+                                    <p>Subtotal</p>
+                                    <p>$262.00</p>
+                                  </div>
+                                  <p className="mt-0.5 text-sm text-gray-500">
+                                    Shipping and taxes calculated at checkout.
+                                  </p>
+                                  <div className="mt-6">
+                                    <a
+                                      href="#"
+                                      className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                                    >
+                                      Checkout
+                                    </a>
+                                  </div>
+                                  <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
+                                    <p>
+                                      or
+                                      <button
+                                        type="button"
+                                        className="font-medium text-indigo-600 hover:text-indigo-500"
+                                      >
+                                        Continue Shopping
+                                        <span aria-hidden="true"> &rarr;</span>
+                                      </button>
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex flex-row justify-start w-[50%] md:w-full gap-4">
-                    <div className="h-[24px] w-[24px] border-blue_gray-100 border-[3px] border-solid" />
-                    <div className="flex flex-row justify-start w-[59%] gap-2">
-                      <Img
-                        src="images/img_star_1_24x24.svg"
-                        alt="image_two"
-                        className="h-[24px] w-[24px]"
-                      />
-                      <Img
-                        src="images/img_star_2.svg"
-                        alt="image_three"
-                        className="h-[24px] w-[24px]"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-row justify-start w-[67%] md:w-full gap-4">
-                    <div className="h-[24px] w-[24px] border-blue_gray-100 border-[3px] border-solid" />
-                    <RatingBar
-                      value={3}
-                      isEditable={true}
-                      color="#fae952"
-                      activeColor="#fae952"
-                      size={24}
-                      starCount={3}
-                      className="flex justify-between"
-                    />
-                  </div>
-                  <div className="flex flex-row justify-start gap-4">
-                    <Button size="xs" shape="square" className="w-[24px]">
-                      <Img src="images/img_checkedbox.svg" />
-                    </Button>
-                    <RatingBar
-                      value={4}
-                      isEditable={true}
-                      color="#fae952"
-                      activeColor="#fae952"
-                      size={24}
-                      starCount={4}
-                      className="flex justify-between"
-                    />
-                  </div>
-                  <div className="flex flex-row justify-start w-full gap-4">
-                    <div className="h-[24px] w-[24px] border-blue_gray-100 border-[3px] border-solid" />
-                    <RatingBar
-                      value={5}
-                      isEditable={true}
-                      color="#fae952"
-                      activeColor="#fae952"
-                      size={24}
-                      className="flex justify-between"
-                    />
-                  </div>
+                  )}
                 </div>
-              </div>
-              <div className="h-px w-full bg-blue_gray-100" />
-              <div className="flex flex-row justify-between items-center w-full">
-                <Text as="p" className="mt-px !text-gray-800">
-                  Filter by Brand
-                </Text>
-                <Img
-                  src="images/img_arrow_down.svg"
-                  alt="arrowdown_five"
-                  className="h-[24px] w-[24px]"
-                />
-              </div>
-              <div className="flex flex-row justify-between items-center w-full">
-                <Text as="p" className="mt-px !text-gray-800">
-                  Filter by Size
-                </Text>
-                <Img
-                  src="images/img_arrow_down.svg"
-                  alt="arrowdown_seven"
-                  className="h-[24px] w-[24px]"
-                />
               </div>
             </div>
 
