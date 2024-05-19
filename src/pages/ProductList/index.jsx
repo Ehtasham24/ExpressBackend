@@ -1,19 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
-import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addCart } from "../../cart/cartSlice";
 import Footer from "../../components/Footer/index";
-import store from "../../store/store";
-import {
-  Text,
-  Input,
-  Img,
-  Heading,
-  Button,
-  RatingBar,
-  CheckBox,
-} from "../../components";
+import { Text, Heading } from "../../components";
 import Header from "../../components/Header";
 import { useParams } from "react-router-dom";
 
@@ -21,67 +11,53 @@ export default function ProductListPage() {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-
   const { prodNum } = useParams();
-
-  console.log("idddddddddddd", prodNum);
-
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch("http://localhost:4000/categories");
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch categories: " + response.status);
-      }
-
-      const data = await response.json();
-      console.log("Categories data:", data);
-      setCategories(data);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
-
-  const fetchProducts = async (id) => {
-    try {
-      console.log(id);
-      const response = await fetch(`http://localhost:4000/categories/${id}`);
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch products: " + response.status);
-      }
-
-      const data = await response.json();
-      console.log("Products data:", data);
-
-      const filteredProducts = data.filter((product) =>
-        product.productname.toLowerCase().includes(searchValue.toLowerCase())
-      );
-
-      setProducts(filteredProducts);
-      // setProducts(data);
-    } catch (error) {
-      console.error("Error fetching Products:", error);
-    }
-  };
-
-  const handleSearchInputChange = (event) => {
-    console.log("Event:", event); // Check the event object
-    // console.log(event.target.value);
-    setSearchValue(event.target.value);
-  };
-
-  useEffect(() => {
-    fetchCategories();
-    fetchProducts(prodNum);
-  }, [searchValue]);
 
   const dispatch = useDispatch();
   const cart = useSelector((store) => store.cart.carts);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/categories");
+        if (!response.ok) {
+          throw new Error("Failed to fetch categories: " + response.status);
+        }
+        const data = await response.json();
+        setCategories(data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/categories/${prodNum}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch products: " + response.status);
+        }
+        const data = await response.json();
+        const filteredProducts = data.filter((product) =>
+          product.productname.toLowerCase().includes(searchValue.toLowerCase())
+        );
+        setProducts(filteredProducts);
+      } catch (error) {
+        console.error("Error fetching Products:", error);
+      }
+    };
+
+    fetchCategories();
+    fetchProducts();
+  }, [prodNum, searchValue]);
+
+  const handleSearchInputChange = (event) => {
+    setSearchValue(event.target.value);
+  };
+
   const cartAddition = (product) => {
     dispatch(addCart(product));
-    console.log(store.getState());
   };
 
   return (
@@ -115,10 +91,6 @@ export default function ProductListPage() {
               style={{ border: "1px solid black" }}
               className="h-10 w-96"
             />
-
-            {/*      {SEARCH BAR STARTS} */}
-
-            {/*      {SEARCH BAR ENDS} */}
           </div>
           <div className="flex flex-row md:flex-col justify-start items-start w-full gap-8 md:gap-5">
             <div className="flex flex-col items-start justify-start w-[16%] md:w-full gap-8">

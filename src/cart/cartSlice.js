@@ -42,8 +42,8 @@ export const CartSlice = createSlice({
       const { id } = action.payload;
       const item = state.carts.find((item) => item.id === id);
       if (item) {
-        //  item.quantity += 1;
-        item.price *= 2; // Double the price
+        item.quantity += 1;
+        //item.price *= 2; // Double the price
       }
     },
     decreaseQuantity(state, action) {
