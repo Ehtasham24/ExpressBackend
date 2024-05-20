@@ -1,14 +1,11 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { setOpen } from "cart/isOpenSlice";
+import { useDispatch } from "react-redux";
 
-const AddProductModal = ({ categoriesSideBarRef }) => {
-  const isOpen = useSelector((state) => state.isOpen);
+const AddProductModal = ({ handleModalHide }) => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     name: "",
     buying_price: "",
-
     quantity: "",
     category_id: "",
   });
@@ -19,19 +16,6 @@ const AddProductModal = ({ categoriesSideBarRef }) => {
       ...prevFormData,
       [name]: value,
     }));
-  };
-
-  const handleModalHide = () => {
-    dispatch(setOpen(false));
-    const modal = document.getElementById("authentication-modal");
-    console.log(categoriesSideBarRef.current);
-
-    if (categoriesSideBarRef?.current) {
-      categoriesSideBarRef.current.style.opacity = "1";
-    }
-
-    modal.classList.add("hidden");
-    modal.classList.remove("flex");
   };
 
   const handleSubmitProduct = async (e) => {

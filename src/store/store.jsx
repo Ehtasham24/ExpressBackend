@@ -1,5 +1,5 @@
-import cartReducer from "../cart/cartSlice";
-import isOpenReducer from "../cart/isOpenSlice";
+import cartReducer from "../cartRedux/cartSlice";
+import isOpenReducer from "../cartRedux/isOpenSlice";
 
 import { configureStore } from "@reduxjs/toolkit";
 

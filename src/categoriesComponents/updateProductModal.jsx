@@ -1,9 +1,9 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setOpen } from "cart/isOpenSlice";
+import { setOpen } from "cartRedux/isOpenSlice";
 import { useState } from "react";
 
-const UpdateProductModal = () => {
+const UpdateProductModal = ({ updateModalHide }) => {
   const [formData, setFormData] = useState({
     name: "",
     buying_price: "",
@@ -13,13 +13,6 @@ const UpdateProductModal = () => {
 
   const isOpen = useSelector((state) => state.isOpen);
   const dispatch = useDispatch();
-
-  const updateModalHide = () => {
-    dispatch(setOpen(false));
-    const modal = document.getElementById("update-modal");
-    modal.classList.add("hidden");
-    modal.classList.remove("flex");
-  };
 
   const handleChange = (e, setter) => {
     // Extract the name and value from the input field that triggered the change event

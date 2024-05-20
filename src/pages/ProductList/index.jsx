@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { useSelector, useDispatch } from "react-redux";
-import { addCart } from "../../cart/cartSlice";
+import { addCart } from "../../cartRedux/cartSlice";
 import Footer from "../../components/Footer/index";
 import { Text, Heading } from "../../components";
 import Header from "../../components/Header";
@@ -11,8 +11,11 @@ export default function ProductListPage() {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  const { prodNum } = useParams();
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [sellingPrice, setSellingPrice] = useState("");
 
+  const { prodNum } = useParams();
   const dispatch = useDispatch();
   const cart = useSelector((store) => store.cart.carts);
 
@@ -56,8 +59,22 @@ export default function ProductListPage() {
     setSearchValue(event.target.value);
   };
 
-  const cartAddition = (product) => {
-    dispatch(addCart(product));
+  const handleAddToCartClick = (product) => {
+    setSelectedProduct(product);
+    setShowPopup(true);
+  };
+
+  const handlePopupSubmit = () => {
+    if (sellingPrice) {
+      const productWithPrice = {
+        ...selectedProduct,
+        sellingPrice: parseInt(sellingPrice, 10),
+      };
+      console.log("Submitted product:", productWithPrice);
+      dispatch(addCart(productWithPrice));
+      setShowPopup(false);
+      setSellingPrice("");
+    }
   };
 
   return (
@@ -129,33 +146,35 @@ export default function ProductListPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {products.map((product, index) => (
-                      <tr
-                        key={product.id}
-                        className=" border border-black bg-slate-300"
-                      >
-                        <td className="text-lg uppercase font-bold pl-5 py-3">
-                          {index + 1}.
-                        </td>
-                        <td className="text-lg uppercase font-bold">
-                          {product.productname}
-                        </td>
-                        <td className="text-black-600 pl-12 text-xl">
-                          {product.quantity}
-                        </td>
-                        <td className="text-black-600 pl-16 text-xl">
-                          {product.buyingprice}
-                        </td>
-                        <td className="flex justify-end">
-                          <button
-                            onClick={() => cartAddition(product)}
-                            className="mr-4 px-4 py-2 mt-2 bg-gray-800 text-white-A700 text-xs font-bold uppercase rounded hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
-                          >
-                            Add to cart
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                    {products
+                      .filter((product) => product.quantity >= 1)
+                      .map((product, index) => (
+                        <tr
+                          key={product.id}
+                          className="border border-black bg-slate-300"
+                        >
+                          <td className="text-lg uppercase font-bold pl-5 py-3">
+                            {index + 1}.
+                          </td>
+                          <td className="text-lg uppercase font-bold">
+                            {product.productname}
+                          </td>
+                          <td className="text-black-600 pl-12 text-xl">
+                            {product.quantity}
+                          </td>
+                          <td className="text-black-600 pl-16 text-xl">
+                            {product.buyingprice}
+                          </td>
+                          <td className="flex justify-end">
+                            <button
+                              onClick={() => handleAddToCartClick(product)}
+                              className="mr-4 px-4 py-2 mt-2 bg-gray-800 text-white-A700 text-xs font-bold uppercase rounded hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
+                            >
+                              Add to cart
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
@@ -164,6 +183,34 @@ export default function ProductListPage() {
         </div>
         <Footer className="flex justify-center items-center w-full mt-[85px] p-[30px] sm:p-5 bg-gray-800" />
       </div>
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white-A700 opacity-100 p-12 rounded-lg shadow-lg max-w-md w-full">
+            <h2 className="text-2xl font-bold mb-4">Enter Selling Price</h2>
+            <input
+              type="number"
+              value={sellingPrice}
+              onChange={(e) => setSellingPrice(e.target.value)}
+              style={{ border: "1px solid black" }}
+              className="border border-black p-3 w-full mb-4 h-[2.5rem]"
+            />
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowPopup(false)}
+                className="mr-4 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handlePopupSubmit}
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

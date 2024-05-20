@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Helmet } from "react-helmet";
-import { Text, Heading, Img, Button } from "../../components";
+import { Text, Heading } from "../../components";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 
@@ -10,7 +10,7 @@ import {
   increaseQuantity,
   decreaseQuantity,
   removeCart,
-} from "../../cart/cartSlice";
+} from "../../cartRedux/cartSlice";
 
 import AddProductModal from "../../categoriesComponents/addProductModel";
 import DeleteProductModal from "../../categoriesComponents/deleteProductModal";
@@ -19,7 +19,7 @@ import CartCheckout from "categoriesComponents/cartCheckout";
 
 export default function CategorieswithSidebarPage() {
   const isOpen = useSelector((state) => state.isOpen);
-  const categoriesSideBarRef = useRef(null);
+
   const dispatch = useDispatch();
   const [categories, setCategories] = useState([]);
 
@@ -95,6 +95,32 @@ export default function CategorieswithSidebarPage() {
     }
   };
 
+  //close the add modal
+  const handleModalHide = () => {
+    setOpen(false);
+
+    const modal = document.getElementById("authentication-modal");
+
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  };
+
+  //close the  delete modal
+  const deleteModalHide = () => {
+    setOpen(false);
+    const modal = document.getElementById("delete-modal");
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  };
+
+  //close the update modal
+  const updateModalHide = () => {
+    setOpen(false);
+    const modal = document.getElementById("update-modal");
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  };
+
   const cart = useSelector((store) => store.cart.carts);
 
   return (
@@ -109,14 +135,14 @@ export default function CategorieswithSidebarPage() {
 
       {/*  ADD PRODUCT MODAL */}
 
-      <AddProductModal categoriesSideBarRef={categoriesSideBarRef} />
+      <AddProductModal handleModalHide={handleModalHide} />
 
       {/*  DELETE PRODUCT MODAL */}
 
-      <DeleteProductModal />
+      <DeleteProductModal deleteModalHide={deleteModalHide} />
 
       {/* UPDATE PRODUCT MODAL */}
-      <UpdateProductModal />
+      <UpdateProductModal updateModalHide={updateModalHide} />
 
       <div className="flex flex-col items-center justify-start w-full bg-white-A700">
         <Header className="flex flex-row justify-between items-center w-full p-6 sm:p-5 bg-white-A700" />

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setOpen } from "../cart/isOpenSlice"; // Adjust the path as necessary
+import { setOpen } from "../cartRedux/isOpenSlice"; // Adjust the path as necessary
 
-const DeleteProductModal = () => {
+const DeleteProductModal = ({ deleteModalHide }) => {
   const [deletionData, setDeletionData] = useState({
     name: "",
   });
@@ -32,13 +32,6 @@ const DeleteProductModal = () => {
       console.error("Error deleting product:", err);
       alert(err.message);
     }
-  };
-
-  const deleteModalHide = () => {
-    dispatch(setOpen(false));
-    const modal = document.getElementById("delete-modal");
-    modal.classList.add("hidden");
-    modal.classList.remove("flex");
   };
 
   const handleChange = (e) => {
