@@ -49,8 +49,9 @@ function CartCheckout({ isCartOpen, closeCheckout }) {
 
       console.log(responses);
       dispatch(clearCart());
+      closeCheckout();
       alert(
-        `Total amount for checkout: $${subtotal}\nProducts sold successfully!`
+        `Total amount for checkout: PKR ${subtotal}\nProducts sold successfully!`
       );
     } catch (error) {
       alert(error.message);
@@ -128,11 +129,7 @@ function CartCheckout({ isCartOpen, closeCheckout }) {
                             {cart.map((item) => (
                               <li key={item.id} className="flex py-6">
                                 <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                  <img
-                                    src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg"
-                                    alt="Product image"
-                                    className="h-full w-full object-cover object-center"
-                                  />
+                                  <img src="/images/cart_2.png" alt="cart" />
                                 </div>
 
                                 <div className="ml-4 flex flex-1 flex-col">
@@ -142,7 +139,7 @@ function CartCheckout({ isCartOpen, closeCheckout }) {
                                         <a href="#">{item.productname}</a>
                                       </h3>
                                       <p className="ml-4">
-                                        ${item.sellingPrice}
+                                        PKR {item.sellingPrice}
                                       </p>
                                     </div>
                                   </div>
@@ -182,7 +179,7 @@ function CartCheckout({ isCartOpen, closeCheckout }) {
                     <div className="border-t border-gray-200 bg-white-A700 px-4 py-6 sm:px-6">
                       <div className="flex justify-between text-base font-medium text-gray-900">
                         <p>Subtotal</p>
-                        <p>${calculateSubtotal()}</p>
+                        <p>PKR {calculateSubtotal()}</p>
                       </div>
                       <p className="mt-0.5 text-sm text-gray-500">
                         Shipping and taxes calculated at checkout.

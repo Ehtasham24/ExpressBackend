@@ -142,20 +142,27 @@ const UpdateProductModal = ({ updateModalHide }) => {
               </div>
               <div>
                 <label
-                  htmlFor="Category_id"
+                  htmlFor="category_id"
                   className="block mb-2 text-[1rem] font-semibold text-gray-900 dark:text-white"
                 >
-                  Category ID
+                  Category
                 </label>
-                <input
-                  type="number"
+                <select
                   name="category_id"
-                  id="Category_id"
-                  placeholder="Enter category id"
-                  onChange={(e) => handleChange(e, setFormData)}
+                  id="category_id"
+                  onChange={handleChange}
+                  value={formData.category_id}
                   className="bg-gray-50 border border-gray-300 mt-4 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                   required
-                />
+                >
+                  <option value="" disabled>
+                    Select category
+                  </option>
+                  <option value="1">Plastic item</option>
+                  <option value="2">Kitchen Appliances</option>
+                  <option value="3">Home Appliances</option>
+                  <option value="4">Kitchen Utensils</option>
+                </select>
               </div>
 
               <button

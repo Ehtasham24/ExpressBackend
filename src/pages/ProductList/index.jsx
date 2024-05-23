@@ -6,6 +6,8 @@ import Footer from "../../components/Footer/index";
 import { Text, Heading } from "../../components";
 import Header from "../../components/Header";
 import { useParams } from "react-router-dom";
+import { ImSearch } from "react-icons/im";
+import { Link } from "react-router-dom";
 
 export default function ProductListPage() {
   const [categories, setCategories] = useState([]);
@@ -90,7 +92,9 @@ export default function ProductListPage() {
         <Header className="flex flex-row justify-between items-center w-full p-6 sm:p-5 bg-white-A700" />
         <div className="flex flex-col items-center justify-start w-full mt-[31px] gap-[51px] md:px-5 max-w-[1632px]">
           <div className="flex flex-row justify-between w-[13%] md:w-full">
-            <Text as="p">Home</Text>
+            <Text as="p">
+              <Link to="/">Home</Link>
+            </Text>
             <Text as="p" className="!text-blue_gray-100">
               &gt;
             </Text>
@@ -99,16 +103,21 @@ export default function ProductListPage() {
             </Text>
           </div>
           <Heading as="h1">Product List</Heading>
-          <div className="flex gap-10 text-xl">
+
+          <div className="relative">
             <input
               type="text"
               value={searchValue}
               onChange={handleSearchInputChange}
               placeholder="Search products..."
               style={{ border: "1px solid black" }}
-              className="h-10 w-96"
+              className="h-10 w-96 pr-10"
             />
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 ">
+              <ImSearch className="text-xl" />
+            </div>
           </div>
+
           <div className="flex flex-row md:flex-col justify-start items-start w-full gap-8 md:gap-5">
             <div className="flex flex-col items-start justify-start w-[16%] md:w-full gap-8">
               <div className="flex flex-col items-start justify-start w-full gap-[31px]">
@@ -181,6 +190,7 @@ export default function ProductListPage() {
             </div>
           </div>
         </div>
+
         <Footer className="flex justify-center items-center w-full mt-[85px] p-[30px] sm:p-5 bg-gray-800" />
       </div>
       {showPopup && (

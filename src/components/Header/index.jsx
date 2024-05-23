@@ -9,11 +9,12 @@ export default function Header({ ...props }) {
     <header {...props}>
       <div className="flex flex-row justify-between gap-16 ">
         <div className="flex flex-row justify-start items-start ml-[120px] gap-2 md:ml-5">
-          <Img
-            src="images/img_group_19.svg"
+          <img
+            src="/images/img_group_19.svg"
             alt="image"
             className="h-[24px] mt-1"
           />
+
           <Heading size="xs" as="h4">
             POS system
           </Heading>

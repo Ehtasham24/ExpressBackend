@@ -1,5 +1,7 @@
 import React from "react";
-import { Text, Input, Img, Heading } from "./..";
+import { Text, Heading } from "./..";
+import { FiPhone } from "react-icons/fi";
+import { MdOutlineEmail } from "react-icons/md";
 
 export default function Footer({ ...props }) {
   return (
@@ -8,39 +10,32 @@ export default function Footer({ ...props }) {
         <div className="flex flex-row md:flex-col justify-between items-center w-full md:gap-10">
           <div className="flex flex-col items-start justify-start w-[26%] md:w-full gap-[31px]">
             <div className="flex flex-row justify-start items-start gap-2">
-              <Img
-                src="images/img_group_19_white_a700.svg"
-                alt="image_three"
-                className="h-[24px] mt-1"
-              />
               <Heading size="xs" as="h4" className="!text-white-A700">
                 POS system
               </Heading>
             </div>
             <div className="flex flex-row justify-start">
               <Text as="p" className="!font-normal leading-8">
-                This is developed by LogicHash Solutions
+                This is developed by ScriptSavvy Tech
               </Text>
             </div>
             <div className="flex flex-col items-center justify-start w-full gap-4">
               <div className="flex flex-row justify-start items-center w-full gap-2 py-0.5">
-                <Img
-                  src="images/img_call.svg"
-                  alt="call_one"
-                  className="h-[24px] w-[24px]"
+                <FiPhone
+                  className="text-[1.35rem]"
+                  style={{ color: "white" }}
                 />
                 <Text as="p" className="!text-white-A700 !font-normal">
                   +1234567890
                 </Text>
               </div>
-              <div className="flex flex-row justify-start items-center w-full gap-2">
-                <Img
-                  src="images/img_email_white_a700.svg"
-                  alt="email_three"
-                  className="h-[24px] w-[24px]"
+              <div className="flex flex-row ju  stify-start items-center w-full gap-2">
+                <MdOutlineEmail
+                  className="text-[1.35rem]"
+                  style={{ color: "white" }}
                 />
                 <Text as="p" className="mt-0.5 !text-white-A700 !font-normal">
-                  logichashsolutions@gmail.com
+                  ScriptSavvytech@gmail.com
                 </Text>
               </div>
             </div>
@@ -49,30 +44,19 @@ export default function Footer({ ...props }) {
             <div className="flex flex-col items-start justify-start w-[27%] md:w-full gap-[33px]"></div>
             <div className="flex flex-col items-start justify-start w-[41%] md:w-full gap-[30px]">
               <Heading size="xs" as="h4" className="!text-white-A700">
-                Join our Newsletter
+                ScriptSavvy Tech
               </Heading>
               <Text as="p" className="!font-normal">
-                Drop your email below to get update, promotions, coupons, and
-                more!
+                If you're looking for tailored software solutions, custom
+                websites, or other programming services, feel free to reach out
+                to us. We're here to provide personalized, high-quality services
+                that meet your unique needs.
               </Text>
-              <Input
-                color="gray_800"
-                variant="fill"
-                shape="square"
-                name="email"
-                placeholder="Enter your email"
-                suffix={
-                  <div className="flex justify-center items-center w-[60px] h-[60px] bg-white-A700">
-                    <Img src="images/img_arrow_gray_800.svg" alt="Arrow" />
-                  </div>
-                }
-                className="w-full sm:w-full tracking-[0.36px] border-white-A700 border"
-              />
             </div>
           </div>
         </div>
         <Text size="xs" as="p" className="!text-blue_gray-100">
-          Logic Hash Solutions
+          ScriptSavvy Tech
         </Text>
       </div>
     </footer>
