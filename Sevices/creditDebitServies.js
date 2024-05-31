@@ -24,7 +24,25 @@ const fetchRecordByName = async (name, flg) => {
     `,
         ["%" + name + "%"]
       );
-      console.log(result.rowCount);
+      console.log(result.rows);
+      const groupedResult = result.rows.reduce((acc, row) => {
+        const { id, name, address, email, contact_no, ...history } = row;
+        if (!acc[id]) {
+          acc[id] = {
+            id,
+            name,
+            address,
+            email,
+            contact_no,
+            transaction_history: [],
+          };
+        }
+        acc[id].transaction_history.push(history);
+        return acc;
+      }, {});
+
+      const newResult = Object.values(groupedResult);
+      console.log(newResult);
       if (result.rowCount === 0) {
         console.log(`No name was found with name ${name}`);
         throw new Error(`No "${name}" was found with in the record`);
