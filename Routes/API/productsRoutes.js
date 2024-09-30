@@ -15,7 +15,7 @@ routes.get("/products", GetItems);
 routes.get("/product/:id", GetItemsById);
 routes.post("/products", GetItemsByName);
 routes.post("/product", PostItems);
-routes.delete("/products/:id", DeleteItems);
+routes.delete("/product/:id", DeleteItems);
 routes.delete("/product", DeleteItemsByName);
 routes.put("/products/:id", UpdateItems);
 routes.put("/updateproducts", UpdateItemsByName);

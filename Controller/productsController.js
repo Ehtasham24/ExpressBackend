@@ -150,10 +150,11 @@ const UpdateItemsByName = async (req, res) => {
       category_id
     );
     console.log("check update", result);
+    console.log(result.rows[0]);
     res.send({ message: "updated successfully" });
   } catch (err) {
     console.error(err);
-    res.status(500).send({ message: "controller error" });
+    res.status(500).send({ message: err.message });
   }
 };
 
