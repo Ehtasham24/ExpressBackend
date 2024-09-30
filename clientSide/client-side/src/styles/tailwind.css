@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[type="text"],
+input:where(:not([type])),
+[type="email"],
+[type="url"],
+[type="password"],
+[type="number"],
+[type="date"],
+[type="datetime-local"],
+[type="month"],
+[type="search"],
+[type="tel"],
+[type="time"],
+[type="week"],
+[multiple],
+textarea,
+select {
+  appearance: none;
+  background-color: transparent;
+  border-color: unset;
+  border-width: 0;
+  border-radius: unset;
+  padding: unset;
+  font-size: unset;
+  line-height: unset;
+}
+
+/* Override default focus colors for tailwindcss-forms https://github.com/tailwindlabs/tailwindcss-forms */
+[type="text"]:focus,
+[type="email"]:focus,
+[type="url"]:focus,
+[type="password"]:focus,
+[type="number"]:focus,
+[type="date"]:focus,
+[type="search"]:focus,
+[type="checkbox"]:focus,
+[type="radio"]:focus,
+[multiple]:focus,
+textarea:focus,
+select:focus {
+  --tw-ring-color: "#393d46";
+  border-color: "#393d46";
+}
+@media print {
+  /* Hide elements like buttons, inputs, etc., during printing */
+  button,
+  input,
+  select {
+    display: none;
+  }
+
+  /* Ensure the printable content section is visible */
+  .printable-content {
+    display: block;
+  }
+
+  /* Ensure Start Date, End Date, and Filtered By values are properly formatted */
+  .printable-content p {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  /* Style the table for printing */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    border: 1px solid black;
+    padding: 8px;
+  }
+
+  /* Optionally, remove background colors for cleaner print */
+  body {
+    background: white !important;
+  }
+}
