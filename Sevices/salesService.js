@@ -4,8 +4,8 @@ const insertSales = async (sellingPrice, SellingQuantity, product_id) => {
   try {
     await pool.query(
       `
-      INSERT INTO sales (selling_price, quantity, product_id)
-      VALUES ($1, $2, $3)
+      INSERT INTO sales (selling_price, quantity, product_id,sale_time)
+      VALUES ($1, $2, $3,NOW())
       RETURNING *;
     `,
       [sellingPrice, SellingQuantity, product_id]

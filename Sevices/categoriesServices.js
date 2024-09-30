@@ -16,7 +16,7 @@ const getProductsForCategory = async (id) => {
       SELECT p.*
       FROM "products" p
       JOIN "categories" c ON p."category_id" = c.id
-      WHERE c.id = $1;
+      WHERE c.id = $1 ORDER BY productname;
     `;
     const result = await pool.query(query, [id]);
     console.log(result);
