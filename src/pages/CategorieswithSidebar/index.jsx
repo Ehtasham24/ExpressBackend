@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet";
 import { Text, Heading } from "../../components";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
+import { Link } from "react-router-dom";
 
 import { useNavigate } from "react-router-dom";
 import {
@@ -126,7 +127,9 @@ export default function CategorieswithSidebarPage() {
   return (
     <>
       <Helmet>
-        <title>POS system</title>
+        <button>
+          <title>POS system</title>
+        </button>
         <meta
           name="description"
           content="Web site created using create-react-app"

@@ -82,7 +82,8 @@ export default function ProductListPage() {
   return (
     <>
       <Helmet>
-        <title>POS system</title>
+        <title></title>
+
         <meta
           name="description"
           content="Web site created using create-react-app"

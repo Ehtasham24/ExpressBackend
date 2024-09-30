@@ -1,6 +1,7 @@
 import React from "react";
 import { CloseSVG } from "../../assets/images";
 import { Button, Img, Input, Heading } from "./..";
+import { Link } from "react-router-dom";
 
 export default function Header({ ...props }) {
   const [searchBarValue, setSearchBarValue] = React.useState("");
@@ -14,10 +15,13 @@ export default function Header({ ...props }) {
             alt="image"
             className="h-[24px] mt-1"
           />
-
-          <Heading size="xs" as="h4">
-            POS system
-          </Heading>
+          {/* 
+//this is the place */}
+          <Link to="/">
+            <Heading size="xs" as="h4">
+              POS system
+            </Heading>
+          </Link>
         </div>
       </div>
     </header>

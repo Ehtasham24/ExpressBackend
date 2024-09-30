@@ -5,10 +5,14 @@ import {
   decreaseQuantity,
   clearCart,
 } from "../cartRedux/cartSlice";
+import ReactToPrint from "react-to-print";
+import PrintableCart from "components/Printable/printableCart";
+import { useRef } from "react";
 
 function CartCheckout({ isCartOpen, closeCheckout }) {
   const cart = useSelector((state) => state.cart.carts);
   const dispatch = useDispatch();
+  const printRef = useRef();
 
   // Function to calculate the subtotal
   const calculateSubtotal = () => {
@@ -47,9 +51,16 @@ function CartCheckout({ isCartOpen, closeCheckout }) {
         })
       );
 
-      console.log(responses);
+      // console.log("RESPONSEEEEEEEEEEEE SALES DATA");
+      // console.log(responses);
+
+      console.log("cart", cart);
+
       dispatch(clearCart());
       closeCheckout();
+
+      printRef.current && printRef.current();
+
       alert(
         `Total amount for checkout: PKR ${subtotal}\nProducts sold successfully!`
       );

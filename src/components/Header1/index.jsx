@@ -6,11 +6,7 @@ export default function Header1({ ...props }) {
     <header {...props}>
       <div className="flex flex-row sm:flex-col justify-end items-center w-full gap-[541px] p-6 md:gap-10 sm:p-5 bg-white-A700">
         <div className="flex flex-row justify-start items-start w-[6%] sm:w-full gap-2">
-          <Img
-            src="images/img_group_19.svg"
-            alt="image"
-            className="h-[24px] mt-1"
-          />
+          <Img src="images/.svg" alt="image" className="h-[24px] mt-1" />
           <Heading size="xs" as="h4">
             Logic Hash Solutions
           </Heading>
