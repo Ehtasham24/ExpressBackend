@@ -6,6 +6,6 @@ const {
 } = require("../../Controller/categoriesController");
 
 routes.get("/categories", GetCategories);
-routes.get("/categories/products/:id", GetProductsForCategories);
+routes.get("/categories/:id", GetProductsForCategories);
 
 module.exports = routes;

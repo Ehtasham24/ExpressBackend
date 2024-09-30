@@ -6,12 +6,12 @@ require("dotenv").config({
 });
 
 const pool = new Pool({
-  user: process.env.USER || "postgres",
-  host: process.env.HOST || "localhost",
-  database: process.env.DATABASE || "pos_DB",
-  password: process.env.PASSWORD || "dxtx998",
-  port: process.env.PORT || 5432,
-  rowMode: "array",
+  user: process.env.USER,
+  host: process.env.HOST,
+  database: process.env.DATABASE,
+  password: process.env.PASSWORD,
+  port: process.env.PORT,
+  // rowMode: "array",
 });
 
 module.exports = { pool };
