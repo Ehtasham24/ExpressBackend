@@ -15,6 +15,82 @@ const insertSales = async (sellingPrice, SellingQuantity, product_id) => {
   }
 };
 
+const getRecentSales = async () => {
+  try {
+    // Step 1: Fetch the most recent sale data
+    const recentSaleQuery = `
+      SELECT 
+          s.id, 
+          s.selling_price, 
+          s.quantity, 
+          s.product_id, 
+          DATE_TRUNC('second', s.sale_time) AS sale_time,  -- Truncate to seconds
+          p.productname
+      FROM public.sales s
+      JOIN public.products p ON s.product_id = p.id
+      ORDER BY s.sale_time DESC
+      LIMIT 1;  -- Get only the most recent sale
+    `;
+
+    // Execute the query to get the most recent sale
+    const recentSaleResult = await pool.query(recentSaleQuery);
+
+    // Check if there is any recent sale data
+    if (recentSaleResult.rows.length === 0) {
+      return {
+        message: "No sales data found",
+        data: {
+          salesData: [],
+        },
+      };
+    }
+
+    // Get the most recent sale's truncated time
+    const recentSale = recentSaleResult.rows[0];
+    const recentSaleTime = recentSale.sale_time; // This will be in seconds
+
+    // Step 2: Fetch all sales that occurred at the same truncated time
+    const sameTimeSalesQuery = `
+      SELECT 
+          s.id, 
+          s.selling_price, 
+          s.quantity, 
+          s.product_id, 
+          s.sale_time,
+          p.productname
+      FROM public.sales s
+      JOIN public.products p ON s.product_id = p.id
+      WHERE DATE_TRUNC('second', s.sale_time) = $1  -- Match the truncated time
+      ORDER BY s.sale_time DESC;
+    `;
+
+    // Execute the query to get all sales at the same second
+    const sameTimeSalesResult = await pool.query(sameTimeSalesQuery, [
+      recentSaleTime,
+    ]);
+
+    // Prepare the response with the recent sales at the same time
+    const salesData = sameTimeSalesResult.rows.map((row) => ({
+      id: row.id,
+      selling_price: row.selling_price,
+      quantity: row.quantity,
+      product_id: row.product_id,
+      sale_time: row.sale_time,
+      productname: row.productname,
+    }));
+
+    // Return the recent sales data
+    return {
+      message: "Recent sales fetched successfully",
+      data: {
+        salesData,
+      },
+    };
+  } catch (error) {
+    throw new Error("Error fetching recent sales: " + error.message);
+  }
+};
+
 const updateSalesRecord = async (sellingPrice, SellingQuantity, product_id) => {
   try {
     const { rows } = await pool.query(
@@ -185,4 +261,9 @@ const fetchSalesByProfitLoss = async (startDate, endDate, type) => {
   }
 };
 
-module.exports = { updateSalesRecord, fetchSales, fetchSalesByProfitLoss };
+module.exports = {
+  updateSalesRecord,
+  fetchSales,
+  fetchSalesByProfitLoss,
+  getRecentSales,
+};
