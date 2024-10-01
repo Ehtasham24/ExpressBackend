@@ -15,6 +15,47 @@ const insertSales = async (sellingPrice, SellingQuantity, product_id) => {
   }
 };
 
+const getRecentSales = async () => {
+  try {
+    // Fetch the most recent timestamp from the sales table
+    const recentSaleTimeQuery = `
+      SELECT sale_time FROM public.sales
+      ORDER BY sale_time DESC LIMIT 1;
+    `;
+
+    // Execute the query to get the most recent sale time
+    const recentSaleTimeResult = await pool.query(recentSaleTimeQuery);
+    if (recentSaleTimeResult.rows.length === 0) {
+      throw new Error("No sales records found");
+    }
+
+    const recentSaleTime = recentSaleTimeResult.rows[0].sale_time;
+
+    // Fetch all records with the exact recent timestamp
+    const query = `
+      SELECT s.id, s.selling_price, s.quantity, s.product_id, s.sale_time, p.productname
+      FROM public.sales s
+      JOIN public.products p ON s.product_id = p.id
+      WHERE s.sale_time = $1; -- Use the most recent timestamp to filter
+    `;
+
+    // Execute the query to get all sales at the most recent timestamp
+    const result = await pool.query(query, [recentSaleTime]);
+
+    // Calculate the total amount for the transaction
+    const salesData = result.rows;
+    const totalAmount = salesData.reduce(
+      (acc, sale) => acc + sale.selling_price * sale.quantity,
+      0
+    );
+
+    // Return both sales data and total amount
+    return { salesData, totalAmount };
+  } catch (error) {
+    throw new Error("Error fetching recent sales: " + error.message);
+  }
+};
+
 const updateSalesRecord = async (sellingPrice, SellingQuantity, product_id) => {
   try {
     const { rows } = await pool.query(
@@ -185,4 +226,9 @@ const fetchSalesByProfitLoss = async (startDate, endDate, type) => {
   }
 };
 
-module.exports = { updateSalesRecord, fetchSales, fetchSalesByProfitLoss };
+module.exports = {
+  updateSalesRecord,
+  fetchSales,
+  fetchSalesByProfitLoss,
+  getRecentSales,
+};

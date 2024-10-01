@@ -57,6 +57,10 @@ const Server = async () => {
   server.use(routesProducts);
   server.use(routesCategories);
   server.use(routesSales);
+  console.log(process.env.USER);
+  console.log(process.env.HOST);
+  console.log(process.env.DATABASE);
+  console.log(process.env.PASSWORD);
 
   try {
     server.listen(Port, () => console.log(`Server started at Port ${Port}`));

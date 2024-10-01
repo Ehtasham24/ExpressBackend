@@ -1,4 +1,5 @@
 const {
+  getRecentSales,
   updateSalesRecord,
   fetchSales,
   fetchSalesByProfitLoss,
@@ -22,6 +23,25 @@ const PostSales = async (req, res) => {
     res.status(404).json({
       status: 404,
       message: err.message,
+    });
+  }
+};
+
+const getRecentSale = async (req, res) => {
+  try {
+    // Call the service function to fetch the recent sales at the exact same timestamp
+    const sales = await getRecentSales();
+
+    // Return the fetched sales records in the response
+    return res.status(200).json({
+      message: "Recent sales grouped by timestamp fetched successfully",
+      data: sales,
+    });
+  } catch (error) {
+    // Handle errors and return failure response
+    return res.status(500).json({
+      message: "An error occurred while fetching sales records",
+      error: error.message,
     });
   }
 };
@@ -57,4 +77,5 @@ module.exports = {
   PostSales,
   getSales,
   getSalesByProfitLoss,
+  getRecentSale,
 };
