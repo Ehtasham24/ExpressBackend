@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import DateRangeSelector from "./DataRangeSelector";
 import PrintButton from "./PrintBtn";
+import { Helmet } from "react-helmet";
+import Header from "components/Header";
 import GroupedSalesData from "./GroupedSalesData";
 
 const SalesDataComponent = () => {
@@ -61,46 +63,50 @@ const SalesDataComponent = () => {
   const groupedData = groupByCategory(salesData);
 
   return (
-    <div className="max-w-7xl mx-auto p-6 bg-gray-50 rounded-lg shadow-md">
-      <h1 className="text-3xl font-bold text-gray-800 mb-4">
-        Sales Data Overview
-      </h1>
+    <>
+      <Header className="mt-6 mb-6 pl-6" />
 
-      <DateRangeSelector
-        startDate={startDate}
-        endDate={endDate}
-        filterType={filterType}
-        onStartDateChange={(e) => setStartDate(e.target.value)}
-        onEndDateChange={(e) => setEndDate(e.target.value)}
-        onFilterChange={(e) => setFilterType(e.target.value)}
-        fetchSalesData={fetchSalesData}
-      />
+      <div className="max-w-7xl mx-auto p-6 bg-gray-50 rounded-lg shadow-md">
+        <h1 className="text-3xl font-bold text-gray-800 mb-4">
+          Sales Data Overview
+        </h1>
 
-      <PrintButton handlePrint={handlePrint} />
+        <DateRangeSelector
+          startDate={startDate}
+          endDate={endDate}
+          filterType={filterType}
+          onStartDateChange={(e) => setStartDate(e.target.value)}
+          onEndDateChange={(e) => setEndDate(e.target.value)}
+          onFilterChange={(e) => setFilterType(e.target.value)}
+          fetchSalesData={fetchSalesData}
+        />
 
-      {loading ? (
-        <p className="text-blue-600">Loading data...</p>
-      ) : error ? (
-        <p className="text-red-500">{error}</p>
-      ) : (
-        <>
-          <p className="font-semibold text-lg text-gray-800 mb-4">
-            Total Profit/Loss:{" "}
-            <span
-              className={
-                totalProfitLoss >= 0 ? "text-green-600" : "text-red-600"
-              }
-            >
-              {totalProfitLoss}
-            </span>
-          </p>
+        <PrintButton handlePrint={handlePrint} />
 
-          <div ref={printRef}>
-            <GroupedSalesData groupedData={groupedData} />
-          </div>
-        </>
-      )}
-    </div>
+        {loading ? (
+          <p className="text-blue-600">Loading data...</p>
+        ) : error ? (
+          <p className="text-red-500">{error}</p>
+        ) : (
+          <>
+            <p className="font-semibold text-lg text-gray-800 mb-4">
+              Total Profit/Loss:{" "}
+              <span
+                className={
+                  totalProfitLoss >= 0 ? "text-green-600" : "text-red-600"
+                }
+              >
+                {totalProfitLoss}
+              </span>
+            </p>
+
+            <div ref={printRef}>
+              <GroupedSalesData groupedData={groupedData} />
+            </div>
+          </>
+        )}
+      </div>
+    </>
   );
 };
 

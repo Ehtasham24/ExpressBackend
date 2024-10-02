@@ -2,9 +2,11 @@ const { pool } = require("../Db");
 
 const getItems = async () => {
   try {
+    console.log(`Service for getItems`);
     const result = await pool.query(
       `SELECT * FROM products ORDER BY productname`
     );
+    console.log(result.rows);
     return result.rows; // Return rows
   } catch (err) {
     console.log(err);
@@ -18,6 +20,7 @@ const getItemById = async (id) => {
       `SELECT * FROM products WHERE id=$1 ORDER BY productname`,
       [id]
     );
+    console.log(result.rows);
     return result.rows; // Return rows
   } catch (err) {
     console.error("Error:", err);

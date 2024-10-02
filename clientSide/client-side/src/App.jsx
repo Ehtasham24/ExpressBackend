@@ -11,6 +11,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<CategorieswithSidebar />} />
+        <Route path="/categories/:id" element={<ProductList />} />
         <Route path="/productlist/:prodNum" element={<ProductList />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/bill" element={<Receipt />} />

@@ -17,10 +17,11 @@ export default function ProductListPage() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [sellingPrice, setSellingPrice] = useState("");
 
-  const { prodNum } = useParams();
+  const { prodNum } = useParams(); // Get the category ID from the URL
   const dispatch = useDispatch();
   const cart = useSelector((store) => store.cart.carts);
 
+  // Fetch categories when the component mounts
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -35,7 +36,13 @@ export default function ProductListPage() {
       }
     };
 
+    fetchCategories();
+  }, []);
+
+  // Fetch products when the selected category changes or search value changes
+  useEffect(() => {
     const fetchProducts = async () => {
+      if (!prodNum) return; // Don't fetch products if no category is selected
       try {
         const response = await fetch(
           `http://localhost:4000/categories/${prodNum}`
@@ -49,11 +56,10 @@ export default function ProductListPage() {
         );
         setProducts(filteredProducts);
       } catch (error) {
-        console.error("Error fetching Products:", error);
+        console.error("Error fetching products:", error);
       }
     };
 
-    fetchCategories();
     fetchProducts();
   }, [prodNum, searchValue]);
 
@@ -113,12 +119,13 @@ export default function ProductListPage() {
               style={{ border: "1px solid black" }}
               className="h-10 w-96 pr-10"
             />
-            <div className="absolute inset-y-0 right-0 flex items-center pr-3 ">
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3">
               <ImSearch className="text-xl" />
             </div>
           </div>
 
           <div className="flex flex-row md:flex-col justify-start items-start w-full gap-8 md:gap-5">
+            {/* Left Column: Categories */}
             <div className="flex flex-col items-start justify-start w-[16%] md:w-full gap-8">
               <div className="flex flex-col items-start justify-start w-full gap-[31px]">
                 <div className="flex flex-col items-start justify-start w-full gap-[29px]">
@@ -128,26 +135,31 @@ export default function ProductListPage() {
                   <div className="h-px w-full bg-blue_gray-100" />
                 </div>
                 <div className="flex flex-col items-start justify-start w-[60%] md:w-full gap-[23px]">
-                  {categories.map((category, index) => (
+                  {categories.map((category) => (
                     <div
                       className="flex flex-row justify-start items-center gap-4"
-                      key={index}
+                      key={category.id}
                     >
-                      <Text as="p" className="!font-normal">
+                      <Link
+                        to={`/categories/${category.id}`} // Update the URL with category ID
+                        className="!font-normal text-blue-600 hover:underline"
+                      >
                         {category.category_name}
-                      </Text>
+                      </Link>
                     </div>
                   ))}
                 </div>
               </div>
               <div className="h-px w-full bg-blue_gray-100" />
             </div>
+
+            {/* Right Column: Products */}
             <div className="flex flex-col items-center justify-start w-[84%] md:w-full gap-[29px]">
               <div className="h-[900px] overflow-y-auto">
                 <table className="w-full border border-black">
                   <thead>
                     <tr className="flex gap-52 justify-between py-3">
-                      <th className=" pl-5">No</th>
+                      <th className="pl-5">No</th>
                       <th className="whitespace-nowrap">Product Name</th>
                       <th>Quantity</th>
                       <th className="whitespace-nowrap">Buying Price</th>
@@ -193,6 +205,8 @@ export default function ProductListPage() {
 
         <Footer className="flex justify-center items-center w-full mt-[85px] p-[30px] sm:p-5 bg-gray-800" />
       </div>
+
+      {/* Popup for selling price */}
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white-A700 opacity-100 p-12 rounded-lg shadow-lg max-w-md w-full">

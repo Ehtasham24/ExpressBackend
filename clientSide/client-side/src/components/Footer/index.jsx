@@ -16,7 +16,7 @@ export default function Footer({ ...props }) {
             </div>
             <div className="flex flex-row justify-start">
               <Text as="p" className="!font-normal leading-8">
-                This is developed by ScriptSavvy Tech
+                This solution is brought to you by ScriptSavvy Tech.
               </Text>
             </div>
             <div className="flex flex-col items-center justify-start w-full gap-4">
@@ -26,7 +26,7 @@ export default function Footer({ ...props }) {
                   style={{ color: "white" }}
                 />
                 <Text as="p" className="!text-white-A700 !font-normal">
-                  +1234567890
+                  +(92)3453084337
                 </Text>
               </div>
               <div className="flex flex-row ju  stify-start items-center w-full gap-2">
@@ -47,16 +47,17 @@ export default function Footer({ ...props }) {
                 ScriptSavvy Tech
               </Heading>
               <Text as="p" className="!font-normal">
-                If you're looking for tailored software solutions, custom
-                websites, or other programming services, feel free to reach out
-                to us. We're here to provide personalized, high-quality services
-                that meet your unique needs.
+                If you are seeking tailored software solutions, custom web
+                pages, mobile applications, or any other digital services, we
+                invite you to reach out to us. Our team is committed to
+                delivering personalized, high-quality services designed to meet
+                your unique needs.
               </Text>
             </div>
           </div>
         </div>
         <Text size="xs" as="p" className="!text-blue_gray-100">
-          ScriptSavvy Tech
+          ScriptSavvy Tech ©
         </Text>
       </div>
     </footer>
