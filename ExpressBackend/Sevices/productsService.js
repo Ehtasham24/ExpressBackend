@@ -17,7 +17,7 @@ const getItems = async () => {
 const getItemById = async (id) => {
   try {
     const result = await pool.query(
-      `SELECT * FROM products WHERE id=$1 ORDER BY productname`,
+      `SELECT * FROM products WHERE id=$1 ORDER BY id`,
       [id]
     );
     console.log(result.rows);
@@ -31,7 +31,7 @@ const getItemById = async (id) => {
 const getItemByName = async (name) => {
   try {
     const result = await pool.query(
-      `SELECT * FROM products WHERE name ILIKE $1 ORDER BY productname`,
+      `SELECT * FROM products WHERE name ILIKE $1 ORDER BY id`,
       [name]
     );
     return result.rows; // Return rows

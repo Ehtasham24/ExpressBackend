@@ -51,6 +51,8 @@ export default function ProductListPage() {
           throw new Error("Failed to fetch products: " + response.status);
         }
         const data = await response.json();
+        console.log(data);
+        console.log(data.id);
         const filteredProducts = data.filter((product) =>
           product.productname.toLowerCase().includes(searchValue.toLowerCase())
         );
