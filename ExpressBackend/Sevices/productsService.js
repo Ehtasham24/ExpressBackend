@@ -88,6 +88,9 @@ const updateItems = async (name, price, quantity, category_id, id) => {
 
 const updateItemByName = async (name, buying_price, quantity, category_id) => {
   try {
+    console.log(
+      `Services hit with ${(name, buying_price, category_id, quantity)}`
+    );
     const result = await pool.query(
       `UPDATE "products"
        SET buyingprice = $2, "quantity" = $3, "category_id" = $4
@@ -97,12 +100,12 @@ const updateItemByName = async (name, buying_price, quantity, category_id) => {
       [`%${name}%`, buying_price, quantity, category_id]
     );
 
-    console.log(result);
+    console.log("Result----->", result.rows);
     if (result.rowCount === 0) {
       throw new Error(`No item with name: ${name} found`);
     } else return result.rows; // Return rows
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
     throw new Error(err.message);
   }
 };
@@ -129,16 +132,39 @@ const deleteItemById = async (id) => {
 
 const deleteItemsByName = async (name) => {
   try {
-    const result = await pool.query(
+    // Check if the product exists
+    const productResult = await pool.query(
+      `SELECT id FROM products WHERE productname = $1`,
+      [name]
+    );
+
+    if (productResult.rowCount === 0) {
+      throw new Error(`No item with name ${name} found`);
+    }
+
+    const productId = productResult.rows[0].id;
+
+    // Check if the product is referenced in the sales table
+    const salesResult = await pool.query(
+      `SELECT * FROM sales WHERE product_id = $1`,
+      [productId]
+    );
+
+    if (salesResult.rowCount > 0) {
+      // Remove product_id from sales entries
+      await pool.query(
+        `UPDATE sales SET product_id = NULL WHERE product_id = $1`,
+        [productId]
+      );
+    }
+
+    // Now delete the product
+    const deleteResult = await pool.query(
       `DELETE FROM products WHERE productname = $1`,
       [name]
     );
 
-    if (result.rowCount === 0) {
-      throw new Error(`No item with name ${name} found`);
-    } else {
-      return result; // Return result
-    }
+    return deleteResult; // Return result
   } catch (err) {
     console.error(err);
     throw new Error(`${err.message}`);

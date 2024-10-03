@@ -139,6 +139,56 @@ const updateSalesRecord = async (sellingPrice, SellingQuantity, product_id) => {
   }
 };
 
+const fetchBilledHistory = async () => {
+  try {
+    const query = `
+      SELECT id, selling_price, quantity, sale_time
+      FROM public.sales
+      ORDER BY DATE_TRUNC('second', sale_time), id ASC;
+    `;
+
+    // Fetch the sales data from PostgreSQL
+    const result = await pool.query(query);
+
+    // Initialize an empty array for the grouped transactions
+    const groupedSales = [];
+
+    // Iterate over the sales data and group by selling_time (up to the second)
+    result.rows.forEach((row, index) => {
+      // Ensure sale_time exists and is valid
+      if (!row.sale_time) {
+        console.log(`Missing sale_time for id ${row.id}`);
+        return; // Skip this entry if sale_time is null or undefined
+      }
+
+      const saleTime = row.sale_time.toISOString().slice(0, 19); // Slice the time to seconds
+
+      // If the last group doesn't exist or sale_time has changed, start a new group
+      if (
+        groupedSales.length === 0 ||
+        groupedSales[groupedSales.length - 1][0].sale_time
+          .toISOString()
+          .slice(0, 19) !== saleTime
+      ) {
+        groupedSales.push([]);
+      }
+
+      // Push the current row to the latest group
+      groupedSales[groupedSales.length - 1].push({
+        id: row.id,
+        selling_price: row.selling_price,
+        quantity: row.quantity,
+        sale_time: row.sale_time,
+      });
+    });
+    console.log(groupedSales);
+    return groupedSales;
+  } catch (err) {
+    console.log(err);
+    throw new Error(err.message);
+  }
+};
+
 const isValidDate = (date) => {
   return !isNaN(new Date(date).getTime());
 };
@@ -266,4 +316,5 @@ module.exports = {
   fetchSales,
   fetchSalesByProfitLoss,
   getRecentSales,
+  fetchBilledHistory,
 };

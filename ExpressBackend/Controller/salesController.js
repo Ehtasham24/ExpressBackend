@@ -3,6 +3,7 @@ const {
   updateSalesRecord,
   fetchSales,
   fetchSalesByProfitLoss,
+  fetchBilledHistory,
 } = require("../Sevices/salesService");
 
 const PostSales = async (req, res) => {
@@ -46,6 +47,16 @@ const getRecentSale = async (req, res) => {
   }
 };
 
+const getBilledHistory = async (req, res) => {
+  try {
+    const result = await fetchBilledHistory();
+    res.send(result.rows);
+  } catch (err) {
+    console.log(err);
+    res.send(err.message);
+  }
+};
+
 const getSales = async (req, res) => {
   const { startDate, endDate } = req.body;
   const response = await fetchSales(startDate, endDate);
@@ -78,4 +89,5 @@ module.exports = {
   getSales,
   getSalesByProfitLoss,
   getRecentSale,
+  getBilledHistory,
 };
